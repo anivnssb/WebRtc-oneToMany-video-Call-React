@@ -1,19 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import RemotVideo from './components/remotVideo';
 import LocalVideo from './components/localVideo';
 import InfoIcon from './components/iIcon';
-
+import './App.css';
+import OfferAndAnswer from './components/OfferAndAnswer';
 const WebRTCClient = () => {
-  const [hostORClient, setHostORClient] = React.useState('host');
-  const [peerConnection, setPeerConnection] = React.useState([]);
-  const [inCall, setInCall] = React.useState(false);
-  const [waitingForPeer, setWaitingForPeer] = React.useState(false);
-  const [remoteStreams, setRemoteStreams] = React.useState([]);
+  const [hostORClient, setHostORClient] = useState('host');
+  const [peerConnection, setPeerConnection] = useState([]);
+  const [inCall, setInCall] = useState(false);
+  const [waitingForPeer, setWaitingForPeer] = useState(false);
+  const [remoteStreams, setRemoteStreams] = useState([]);
 
-  const localVideoRef = React.useRef(null);
+  const localVideoRef = useRef(null);
 
-  const [offer, setOffer] = React.useState([]);
-  const [answer, setAnswer] = React.useState([]);
+  const [offer, setOffer] = useState([]);
+  const [answer, setAnswer] = useState([]);
 
   useEffect(() => {
     createPeerConnection();
@@ -271,98 +272,101 @@ const WebRTCClient = () => {
   };
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gap: '2em',
-        margin: '20px',
-      }}
-    >
-      <h3>start by selecting host or client</h3>
-      <div style={{ display: 'flex' }}>
-        <input
-          type="radio"
-          id="host"
-          name="clientOrHost"
-          value="host"
-          onChange={() => setHostORClient('host')}
-        />
-          <label for="host">Host</label> {' '}
-        <input
-          type="radio"
-          id="client"
-          name="clientOrHost"
-          value="client"
-          onChange={() => setHostORClient('client')}
-        />
-          <label for="client">Client</label>
+    <div className="App">
+      <div className="header">
+        <h3>start by selecting host or client</h3>
+        <div>
+          <input
+            type="radio"
+            id="host"
+            name="clientOrHost"
+            value="host"
+            onChange={() => setHostORClient('host')}
+          />
+            <label for="host">Host</label> {' '}
+          <input
+            type="radio"
+            id="client"
+            name="clientOrHost"
+            value="client"
+            onChange={() => setHostORClient('client')}
+          />
+            <label for="client">Client</label>
+        </div>
+        <div className="connection-status">
+          {waitingForPeer ? (
+            <h2> waiting for peer to respond... </h2>
+          ) : (
+            <h1>{peerConnection[0]?.connectionState ?? 'no state'}</h1>
+          )}
+        </div>
       </div>
 
-      <h1>{peerConnection[0]?.connectionState ?? 'no state'}</h1>
-
-      {waitingForPeer && (
-        <center>
-          <h2> waiting for peer to respond... </h2>
-        </center>
-      )}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          gap: '20px',
-        }}
-      >
-        <LocalVideo
+      <div className="call-section">
+        <OfferAndAnswer
           {...{
-            localVideoRef,
             offer,
             setOffer,
             hostORClient,
             startCall,
             answerCall,
-            inCall,
-            hangup,
             answer,
             setAnswer,
             onAnswer,
           }}
         />
-        {remoteStreams.length
-          ? remoteStreams.map((stream, index) => (
-              <>
-                <RemotVideo
-                  {...{
-                    stream,
-                    index,
-                    hangupRemote,
-                    hostORClient,
-                  }}
-                />
-                {remoteStreams.length - 1 === index &&
-                hostORClient === 'host' ? (
-                  <button
-                    style={{ width: 'fit-content', height: 'fit-content' }}
-                    onClick={() => {
-                      setAnswer((prev) => [...prev, 'new remote video']);
-                      createpeerConnectionForRemote();
+        <div className="video-wraper">
+          <LocalVideo
+            {...{
+              localVideoRef,
+              offer,
+              setOffer,
+              hostORClient,
+              startCall,
+              answerCall,
+              inCall,
+              hangup,
+              answer,
+              setAnswer,
+              onAnswer,
+            }}
+          />
+          {remoteStreams.length
+            ? remoteStreams.map((stream, index) => (
+                <>
+                  <RemotVideo
+                    {...{
+                      stream,
+                      index,
+                      hangupRemote,
+                      hostORClient,
                     }}
-                  >
-                    Add new client{' '}
-                    <span className="tooltip">
-                      <InfoIcon />
-                      <span className="tooltiptext">
-                        Use this button to add new client to the meeting, click
-                        this button and then click the startCall button
+                  />
+                  {remoteStreams.length - 1 === index &&
+                  hostORClient === 'host' ? (
+                    <button
+                      style={{ width: 'fit-content', height: 'fit-content' }}
+                      onClick={() => {
+                        setAnswer((prev) => [...prev, 'new remote video']);
+                        createpeerConnectionForRemote();
+                      }}
+                    >
+                      Add new client{' '}
+                      <span className="tooltip">
+                        <InfoIcon />
+                        <span className="tooltiptext">
+                          Use this button to add new client to the meeting,
+                          click this button and then click the startCall button
+                        </span>
                       </span>
-                    </span>
-                  </button>
-                ) : (
-                  ''
-                )}
-              </>
-            ))
-          : ''}
+                    </button>
+                  ) : (
+                    ''
+                  )}
+                </>
+              ))
+            : ''}
+        </div>
       </div>
     </div>
   );

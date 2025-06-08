@@ -1,40 +1,32 @@
-import React from 'react';
 import InfoIcon from './iIcon';
 
 const RemotVideo = ({ index, stream, hangupRemote, hostORClient }) => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div className="remote-video-container">
+      <p>{`${
+        hostORClient === 'client' ? 'Host' : 'Client ' + (index + 1)
+      } `}</p>
+      <video
+        key={index + 'ljdkn'}
+        ref={(el) => {
+          if (el) el.srcObject = stream;
+        }}
+        autoPlay
+      ></video>
       <div>
-        <p>{`${
-          hostORClient === 'client' ? 'Host' : 'Client ' + (index + 1)
-        } `}</p>
-        <video
-          key={index + 'ljdkn'}
-          style={{
-            border: '1px solid black',
-            height: '200px',
-            width: '260px',
+        <button
+          onClick={() => {
+            hangupRemote(index);
           }}
-          ref={(el) => {
-            if (el) el.srcObject = stream;
-          }}
-          autoPlay
-        ></video>
-        <div>
-          <button
-            onClick={() => {
-              hangupRemote(index);
-            }}
-          >
-            Hang Up{' '}
-            <span className="tooltip">
-              <InfoIcon />
-              <span className="tooltiptext">
-                Use this button to end the call with client
-              </span>
+        >
+          Hang Up{' '}
+          <span className="tooltip">
+            <InfoIcon />
+            <span className="tooltiptext">
+              Use this button to end the call with client
             </span>
-          </button>
-        </div>
+          </span>
+        </button>
       </div>
     </div>
   );
