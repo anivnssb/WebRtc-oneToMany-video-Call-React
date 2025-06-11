@@ -51,11 +51,12 @@ body {
 }
 .local-video-container video {
   width: 300px !important;
-  height: 300px !important;
+}
+.local-video-container.not-conneted video {
+  width: 600px !important;
 }
 .remote-video-container video {
   width: 300px !important;
-  height: 300px !important;
 }
 
 .tooltip {

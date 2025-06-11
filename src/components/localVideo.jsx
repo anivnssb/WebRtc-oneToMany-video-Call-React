@@ -2,7 +2,7 @@ import InfoIcon from './iIcon';
 
 const LocalVideo = ({ localVideoRef, inCall, hangup }) => {
   return (
-    <div className="local-video-container">
+    <div className={`local-video-container ${inCall ? '' : 'not-conneted'}`}>
       <p>You</p>
       <video ref={localVideoRef} autoPlay></video>
       <div>

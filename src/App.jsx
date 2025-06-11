@@ -319,16 +319,8 @@ const WebRTCClient = () => {
           <LocalVideo
             {...{
               localVideoRef,
-              offer,
-              setOffer,
-              hostORClient,
-              startCall,
-              answerCall,
               inCall,
               hangup,
-              answer,
-              setAnswer,
-              onAnswer,
             }}
           />
           {remoteStreams.length
