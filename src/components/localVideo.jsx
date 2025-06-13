@@ -1,4 +1,4 @@
-import InfoIcon from './iIcon';
+import InfoIcon from './IIcon';
 
 const LocalVideo = ({ localVideoRef, inCall, hangup }) => {
   return (
