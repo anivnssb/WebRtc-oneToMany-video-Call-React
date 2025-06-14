@@ -4,6 +4,7 @@ import LocalVideo from './LocalVideo';
 import InfoIcon from './IIcon';
 import OfferAndAnswer from './OfferAndAnswer';
 import Landing from './Landing';
+import BackArrowIcon from './BackArrowIcon';
 const WebRTC = ({ hostORClient, setHostORClient }) => {
   const [peerConnection, setPeerConnection] = useState([]);
   const [inCall, setInCall] = useState(false);
@@ -275,6 +276,13 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
   return (
     <div className="App">
       <div className="header">
+        <button
+          className="button back-arrow-button"
+          onClick={() => setHostORClient('')}
+        >
+          {' '}
+          <BackArrowIcon />
+        </button>
         <div className="connection-status">
           {waitingForPeer ? (
             <h2> waiting for peer to respond... </h2>

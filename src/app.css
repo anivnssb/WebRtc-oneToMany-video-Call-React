@@ -4,28 +4,27 @@
 }
 body {
   font-family: Arial, sans-serif;
-  background-color: rgb(60, 60, 60);
-  color: #333;
+  background-color: #110513;
+  color: #0d0c0b;
 }
 .Landing {
-  color: black;
   display: flex;
   justify-content: center;
+  gap: 20px;
   align-items: center;
   height: 100vh;
-  flex-direction: column;
-  gap: 20px;
-  background: linear-gradient(135deg, beige, #333);
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 20px;
-  text-align: center;
-  width: 80vw;
-  max-width: 600px;
-  margin: auto;
-  transition: background-color 0.3s ease;
-  border: 2px solid #444;
-  box-sizing: border-box;
+  flex-direction: row;
+  background: linear-gradient(#280021, #000000);
+}
+.select-host-or-client {
+  background-color: #088f8f;
+  padding: 20px;
+  border-radius: 10px;
+  width: 50vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .header {
   display: flex;
@@ -33,16 +32,25 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #f8f9fa;
   position: sticky;
   top: 0px;
 }
-
-.header h1 {
-  margin: 0;
+.button {
+  background: linear-gradient(90deg, #6a0045, #280021);
+  border-radius: 25px;
+  padding: 10px 15px;
+  color: #f8f9fa;
+}
+button.back-arrow-button {
+  padding: 5px 10px;
+}
+.button.connect-buttons {
+  padding: 5px 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .connection-status {
-  background-color: red;
+  color: #f8f9fa;
   padding: 5px 10px;
   border-radius: 5px;
   width: 40vw;
@@ -58,6 +66,32 @@ body {
   gap: 20px;
   justify-content: flex-start;
   color: beige;
+  margin: 10px;
+  padding: 10px 15px;
+}
+
+.offer-and-answer-container {
+  background: linear-gradient(#280021, #360133);
+  height: fit-content;
+  padding: 10px;
+  border-radius: 15px;
+}
+.offer-and-answer-container textarea {
+  height: fit-content;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #280021;
+  color: #f8f9fa;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.offer-and-answer-container textarea::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.offer-and-answer-container textarea {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .video-wraper {
@@ -68,6 +102,8 @@ body {
   padding: 20px;
   justify-items: center;
   align-items: center;
+  border: 2px solid #350067;
+  border-radius: 10px;
 }
 .local-video-container video {
   width: 300px !important;
@@ -111,7 +147,6 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    margin-left: 10px;
     align-items: center;
   }
 }

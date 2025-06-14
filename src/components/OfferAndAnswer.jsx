@@ -19,7 +19,6 @@ const OfferAndAnswer = ({
       <div>
         <div>Offer</div>
         <textarea
-          id="offer123"
           style={{ width: '260px' }}
           value={
             offer[offer.length - 1]
@@ -34,7 +33,7 @@ const OfferAndAnswer = ({
         />
         {hostORClient === 'host' ? (
           <div>
-            <button onClick={startCall}>
+            <button className="button connect-buttons" onClick={startCall}>
               Start Call{' '}
               <span className="tooltip">
                 <InfoIcon />
@@ -45,6 +44,7 @@ const OfferAndAnswer = ({
               </span>
             </button>{' '}
             <button
+              className="button connect-buttons"
               onClick={() => copyText(JSON.stringify(offer[offer.length - 1]))}
             >
               Copy Offer{' '}
@@ -58,7 +58,10 @@ const OfferAndAnswer = ({
             </button>
           </div>
         ) : (
-          <button onClick={() => answerCall('test')}>
+          <button
+            className="button connect-buttons"
+            onClick={() => answerCall('test')}
+          >
             Answer Call{' '}
             <span className="tooltip">
               <InfoIcon />
@@ -72,7 +75,6 @@ const OfferAndAnswer = ({
       <div>
         <div>Answer</div>
         <textarea
-          id="answer123"
           style={{ width: '260px' }}
           value={
             answer[answer.length - 1]
@@ -96,6 +98,7 @@ const OfferAndAnswer = ({
         <div>
           {hostORClient === 'host' ? (
             <button
+              className="button connect-buttons"
               onClick={() => onAnswer(JSON.parse(answer[answer.length - 1]))}
             >
               Connect{' '}
@@ -111,6 +114,7 @@ const OfferAndAnswer = ({
           )}
           {hostORClient === 'client' ? (
             <button
+              className="button connect-buttons"
               onClick={() =>
                 copyText(JSON.stringify(answer[answer.length - 1]))
               }
