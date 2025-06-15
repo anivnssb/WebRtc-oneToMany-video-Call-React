@@ -3,7 +3,6 @@ import InfoIcon from './IIcon';
 const LocalVideo = ({ localVideoRef, inCall, hangup }) => {
   return (
     <div className={`local-video-container ${inCall ? '' : 'not-conneted'}`}>
-      <p>You</p>
       <div className="video-wraper">
         <video ref={localVideoRef} autoPlay></video>
         <div className={inCall ? 'overlay' : ''}>
@@ -20,6 +19,7 @@ const LocalVideo = ({ localVideoRef, inCall, hangup }) => {
           </div>
         </div>
       </div>
+      <p>You</p>
       <div></div>
     </div>
   );
