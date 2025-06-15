@@ -32,7 +32,7 @@ const OfferAndAnswer = ({
           cols="50"
         />
         {hostORClient === 'host' ? (
-          <div>
+          <div className="connect-buttons-container">
             <button className="button connect-buttons" onClick={startCall}>
               Start Call{' '}
               <span className="tooltip">
@@ -42,7 +42,7 @@ const OfferAndAnswer = ({
                   the generated offer
                 </span>
               </span>
-            </button>{' '}
+            </button>
             <button
               className="button connect-buttons"
               onClick={() => copyText(JSON.stringify(offer[offer.length - 1]))}
