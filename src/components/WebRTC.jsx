@@ -296,7 +296,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             </h1>
           )}
         </div>
-        {hostORClient === 'host' ? (
+        {hostORClient === 'host' && inCall ? (
           <button
             className="button"
             style={{ width: 'fit-content', height: 'fit-content' }}
@@ -306,13 +306,13 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             }}
           >
             Add new client{' '}
-            <span className="tooltip">
+            {/* <span className="tooltip">
               <InfoIcon />
               <span className="tooltiptext">
                 Use this button to add new client to the meeting, click this
                 button and then click the startCall button
               </span>
-            </span>
+            </span> */}
           </button>
         ) : (
           ''
