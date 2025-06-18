@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import RemotVideo from './RemotVideo';
 import LocalVideo from './LocalVideo';
-import InfoIcon from './IIcon';
 import OfferAndAnswer from './OfferAndAnswer';
 import Landing from './Landing';
-import BackArrowIcon from './BackArrowIcon';
+import Navbar from './Navbar';
 const WebRTC = ({ hostORClient, setHostORClient }) => {
   const [peerConnection, setPeerConnection] = useState([]);
   const [inCall, setInCall] = useState(false);
@@ -270,54 +269,19 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       console.error('Error answering call:', error);
     }
   };
-  if (!hostORClient) {
-    return <Landing {...{ setHostORClient, hostORClient }} />;
-  }
   return (
     <div className="App">
-      <div className="header">
-        <button
-          className="button back-arrow-button"
-          onClick={() => setHostORClient('')}
-        >
-          {' '}
-          <BackArrowIcon />
-        </button>
-        <div className="connection-status">
-          {waitingForPeer ? (
-            <h2> waiting for peer to respond... </h2>
-          ) : (
-            <h1>
-              {peerConnection[0]?.connectionState === 'new'
-                ? hostORClient === 'host'
-                  ? 'meeting not started'
-                  : 'join a meeting'
-                : peerConnection[0]?.connectionState ?? 'no state'}
-            </h1>
-          )}
-        </div>
-        {hostORClient === 'host' && inCall ? (
-          <button
-            className="button"
-            style={{ width: 'fit-content', height: 'fit-content' }}
-            onClick={() => {
-              setAnswer((prev) => [...prev, 'new remote video']);
-              createpeerConnectionForRemote();
-            }}
-          >
-            Add new client{' '}
-            {/* <span className="tooltip">
-              <InfoIcon />
-              <span className="tooltiptext">
-                Use this button to add new client to the meeting, click this
-                button and then click the startCall button
-              </span>
-            </span> */}
-          </button>
-        ) : (
-          ''
-        )}
-      </div>
+      <Navbar
+        {...{
+          setHostORClient,
+          waitingForPeer,
+          peerConnection,
+          hostORClient,
+          inCall,
+          setAnswer,
+          createpeerConnectionForRemote,
+        }}
+      />
 
       <div className="call-section">
         <OfferAndAnswer
@@ -332,7 +296,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             onAnswer,
           }}
         />
-        <div className="local-video-remote-wraper">
+        <div className="local-remote-video-wraper">
           <LocalVideo
             {...{
               localVideoRef,
@@ -342,17 +306,15 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           />
           {remoteStreams.length
             ? remoteStreams.map((stream, index) => (
-                <>
-                  <RemotVideo
-                    {...{
-                      stream,
-                      index,
-                      hangupRemote,
-                      hostORClient,
-                    }}
-                    key={index + 'remote-video'}
-                  />
-                </>
+                <RemotVideo
+                  {...{
+                    stream,
+                    index,
+                    hangupRemote,
+                    hostORClient,
+                  }}
+                  key={index + 'remote-video-component'}
+                />
               ))
             : ''}
         </div>
