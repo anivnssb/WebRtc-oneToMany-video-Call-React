@@ -1,11 +1,9 @@
-import InfoIcon from './IIcon';
-
 const RemotVideo = ({ index, stream, hangupRemote, hostORClient }) => {
   return (
     <div className="remote-video-container">
       <div className="video-wraper">
         <video
-          key={index + 'ljdkn'}
+          key={index + 'remote-video-element'}
           ref={(el) => {
             if (el) el.srcObject = stream;
           }}

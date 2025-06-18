@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Landing = ({ hostORClient, setHostORClient }) => {
+const Landing = ({ setHostORClient }) => {
   return (
     <div className="Landing">
       <button className="button" onClick={() => setHostORClient('host')}>

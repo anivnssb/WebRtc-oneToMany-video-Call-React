@@ -99,7 +99,7 @@ button.back-arrow-button {
   scrollbar-width: none; /* Firefox */
 }
 
-.local-video-remote-wraper {
+.local-remote-video-wraper {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 10px;
@@ -113,7 +113,7 @@ button.back-arrow-button {
 }
 .local-video-container video {
   width: 300px !important;
-  border: 2px solid #e29a65;
+  border: 5px solid #e29a65;
   border-radius: 25px;
 }
 .local-video-container.not-conneted video {
@@ -160,7 +160,7 @@ button.back-arrow-button {
 .remote-video-container video {
   width: 300px !important;
   border-radius: 25px;
-  border: 2px solid #e29a65;
+  border: 5px solid #e29a65;
   border-radius: 25px;
 }
 
