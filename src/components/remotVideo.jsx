@@ -18,13 +18,7 @@ const RemotVideo = ({ index, stream, hangupRemote, hostORClient }) => {
                 hangupRemote(index);
               }}
             >
-              Hang Up{' '}
-              <span className="tooltip">
-                <InfoIcon />
-                <span className="tooltiptext">
-                  Use this button to end the call with client
-                </span>
-              </span>
+              Hang Up
             </button>
           </div>
         </div>

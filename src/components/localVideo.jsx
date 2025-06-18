@@ -7,15 +7,7 @@ const LocalVideo = ({ localVideoRef, inCall, hangup }) => {
         <video ref={localVideoRef} autoPlay></video>
         <div className={inCall ? 'overlay' : ''}>
           <div className="hangup-button-container">
-            <button onClick={hangup}>
-              Hang Up{' '}
-              <span className="tooltip">
-                <InfoIcon />
-                <span className="tooltiptext">
-                  Use this button to end the meeting
-                </span>
-              </span>
-            </button>
+            <button onClick={hangup}>Hang Up</button>
           </div>
         </div>
       </div>
