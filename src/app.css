@@ -116,6 +116,9 @@ button.back-arrow-button {
   border: 5px solid #e29a65;
   border-radius: 25px;
 }
+.local-video-container.client-pinned video {
+  width: 200px !important;
+}
 .local-video-container.not-conneted video {
   width: 600px !important;
   border-radius: 25px;
@@ -154,6 +157,13 @@ button.back-arrow-button {
 .overlay:hover .hangup-button-container {
   visibility: visible;
 }
+.hangup-button {
+  background-color: red;
+  border-radius: 100%;
+  padding: 7px;
+  border: none;
+  cursor: pointer;
+}
 .remote-video-container {
   text-align: center;
 }
@@ -162,6 +172,12 @@ button.back-arrow-button {
   border-radius: 25px;
   border: 5px solid #e29a65;
   border-radius: 25px;
+}
+.remote-video-container.client-pinned video {
+  width: 200px !important;
+}
+.remote-video-container.pinned-client video {
+  width: 600px !important;
 }
 
 .tooltip {
@@ -207,6 +223,23 @@ button.back-arrow-button {
     justify-content: space-evenly;
   }
   .local-video-container.not-conneted video {
+    width: 100% !important;
+  }
+
+  .local-video-container video {
+    width: 100% !important;
+  }
+  .local-video-container.client-pinned video {
+    width: 100% !important;
+  }
+
+  .remote-video-container video {
+    width: 100% !important;
+  }
+  .remote-video-container.pinned-client video {
+    width: 100% !important;
+  }
+  .remote-video-container.client-pinned video {
     width: 100% !important;
   }
 }

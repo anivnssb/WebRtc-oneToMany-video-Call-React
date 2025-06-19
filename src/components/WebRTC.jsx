@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef, useReducer } from 'react';
-import RemotVideo from './RemotVideo';
+import RemotVideo from './remoteVideo';
 import LocalVideo from './LocalVideo';
 import OfferAndAnswer from './OfferAndAnswer';
 import Landing from './Landing';
 import Navbar from './Navbar';
 import { initialState, reducerFunction } from '../state/stateAndReducer';
+import RemoteVideo from './remoteVideo';
 const WebRTC = ({ hostORClient, setHostORClient }) => {
   const [state, dispatch] = useReducer(reducerFunction, initialState);
   const {
@@ -14,6 +15,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     remoteStreams,
     offer,
     answer,
+    pinnedClient,
   } = state;
 
   const localVideoRef = useRef(null);
@@ -314,16 +316,19 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
               localVideoRef,
               inCall,
               hangup,
+              pinnedClient,
             }}
           />
           {remoteStreams.length
             ? remoteStreams.map((stream, index) => (
-                <RemotVideo
+                <RemoteVideo
                   {...{
                     stream,
                     index,
                     hangupRemote,
                     hostORClient,
+                    dispatch,
+                    pinnedClient,
                   }}
                   key={index + 'remote-video-component'}
                 />

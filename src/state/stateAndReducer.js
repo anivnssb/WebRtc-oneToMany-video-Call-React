@@ -5,6 +5,7 @@ export const initialState = {
   remoteStreams: [],
   offer: [],
   answer: [],
+  pinnedClient: null,
 };
 
 export const reducerFunction = (state, action) => {
@@ -23,6 +24,8 @@ export const reducerFunction = (state, action) => {
       return { ...state, offer: action.payload };
     case 'SET_ANSWER':
       return { ...state, answer: action.payload };
+    case 'SET_PINNED_CLIENT':
+      return { ...state, pinnedClient: action.payload };
     default:
       return state;
   }
