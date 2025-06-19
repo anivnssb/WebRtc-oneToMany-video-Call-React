@@ -1,12 +1,21 @@
+import { useEffect, useRef } from 'react';
+
 const RemotVideo = ({ index, stream, hangupRemote, hostORClient }) => {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current && stream) {
+      if (videoRef.current.srcObject?.id !== stream?.id) {
+        videoRef.current.srcObject = stream;
+      }
+    }
+  }, [stream]);
   return (
     <div className="remote-video-container">
       <div className="video-wraper">
         <video
           key={index + 'remote-video-element'}
-          ref={(el) => {
-            if (el) el.srcObject = stream;
-          }}
+          ref={videoRef}
           autoPlay
         ></video>
         <div className="overlay">
