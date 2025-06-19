@@ -266,7 +266,6 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
 
     try {
       await generateIceCandidate('receiver');
-      console.log(offer);
       const offerr = await JSON.parse(offer[offer.length - 1]);
       const offerDescription = new RTCSessionDescription(offerr);
       await peerConnection[peerConnection.length - 1].setRemoteDescription(

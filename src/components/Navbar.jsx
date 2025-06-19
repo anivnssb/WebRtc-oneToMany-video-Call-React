@@ -39,7 +39,10 @@ const Navbar = ({
           onClick={() => {
             dispatch({
               type: 'SET_ANSWER',
-              payload: [...answer, 'clear this text and paste the answer'],
+              payload: [
+                ...answer,
+                'clear this text and paste the answer from the new clent',
+              ],
             });
             createpeerConnectionForRemote();
           }}
