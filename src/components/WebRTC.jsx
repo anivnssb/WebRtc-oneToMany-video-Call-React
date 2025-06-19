@@ -4,7 +4,7 @@ import LocalVideo from './LocalVideo';
 import OfferAndAnswer from './OfferAndAnswer';
 import Landing from './Landing';
 import Navbar from './Navbar';
-import { initialState, reducerFunction } from '../state/reducerFunction';
+import { initialState, reducerFunction } from '../state/stateAndReducer';
 const WebRTC = ({ hostORClient, setHostORClient }) => {
   // const [peerConnection, setPeerConnection] = useState([]);
   // const [inCall, setInCall] = useState(false);
