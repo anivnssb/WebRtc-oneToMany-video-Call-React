@@ -6,13 +6,6 @@ import Landing from './Landing';
 import Navbar from './Navbar';
 import { initialState, reducerFunction } from '../state/stateAndReducer';
 const WebRTC = ({ hostORClient, setHostORClient }) => {
-  // const [peerConnection, setPeerConnection] = useState([]);
-  // const [inCall, setInCall] = useState(false);
-  // const [waitingForPeer, setWaitingForPeer] = useState(false);
-  // const [remoteStreams, setRemoteStreams] = useState([]);
-  // const [offer, setOffer] = useState([]);
-  // const [answer, setAnswer] = useState([]);
-
   const [state, dispatch] = useReducer(reducerFunction, initialState);
   const {
     inCall,
