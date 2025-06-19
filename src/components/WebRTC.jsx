@@ -1,19 +1,29 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useReducer } from 'react';
 import RemotVideo from './RemotVideo';
 import LocalVideo from './LocalVideo';
 import OfferAndAnswer from './OfferAndAnswer';
 import Landing from './Landing';
 import Navbar from './Navbar';
+import { initialState, reducerFunction } from '../state/reducerFunction';
 const WebRTC = ({ hostORClient, setHostORClient }) => {
-  const [peerConnection, setPeerConnection] = useState([]);
-  const [inCall, setInCall] = useState(false);
-  const [waitingForPeer, setWaitingForPeer] = useState(false);
-  const [remoteStreams, setRemoteStreams] = useState([]);
+  // const [peerConnection, setPeerConnection] = useState([]);
+  // const [inCall, setInCall] = useState(false);
+  // const [waitingForPeer, setWaitingForPeer] = useState(false);
+  // const [remoteStreams, setRemoteStreams] = useState([]);
+  // const [offer, setOffer] = useState([]);
+  // const [answer, setAnswer] = useState([]);
+
+  const [state, dispatch] = useReducer(reducerFunction, initialState);
+  const {
+    inCall,
+    peerConnection,
+    waitingForPeer,
+    remoteStreams,
+    offer,
+    answer,
+  } = state;
 
   const localVideoRef = useRef(null);
-
-  const [offer, setOffer] = useState([]);
-  const [answer, setAnswer] = useState([]);
 
   useEffect(() => {
     createPeerConnection();
@@ -32,20 +42,20 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
 
       switch (peerConnection.connectionState) {
         case 'connecting':
-          setWaitingForPeer(true);
+          dispatch({ type: 'SET_WAITING_FOR_PEER', payload: true });
           break;
 
         case 'connected':
-          setInCall(true);
-          setWaitingForPeer(false);
+          dispatch({ type: 'SET_IN_CALL', payload: true });
+          dispatch({ type: 'SET_WAITING_FOR_PEER', payload: false });
           break;
 
         case 'disconnected':
           peerConnection.close();
-          setInCall(false);
-          setOffer([]);
-          setAnswer([]);
-          setRemoteStreams([]);
+          dispatch({ type: 'SET_IN_CALL', payload: false });
+          dispatch({ type: 'SET_OFFER', payload: [] });
+          dispatch({ type: 'SET_ANSWER', payload: [] });
+          dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
           createPeerConnection();
           console.log('Disconnected from peer');
           break;
@@ -86,9 +96,12 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       event.streams[0].getTracks().forEach((track) => {
         remoteStream.addTrack(track);
       });
-      setRemoteStreams((prevStreams) => [...prevStreams, remoteStream]);
+      dispatch({
+        type: 'SET_REMOTE_STREAMS',
+        payload: [...remoteStreams, remoteStream],
+      });
     };
-    setPeerConnection((prev) => [...prev, pc]);
+    dispatch({ type: 'SET_PEER_CONNECTION', payload: [...peerConnection, pc] });
   };
   const createPeerConnection = async () => {
     // This function is used to create a new peer connection for the firt time
@@ -122,10 +135,12 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       event.streams[0].getTracks().forEach((track) => {
         remoteStream.addTrack(track);
       });
-      setRemoteStreams((prevStreams) => [...prevStreams, remoteStream]);
+      dispatch({
+        type: 'SET_REMOTE_STREAMS',
+        payload: [...remoteStreams, remoteStream],
+      });
     };
-
-    setPeerConnection([pc]);
+    dispatch({ type: 'SET_PEER_CONNECTION', payload: [pc] });
   };
 
   const generateIceCandidate = async (peerType) => {
@@ -136,15 +151,21 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       if (event.candidate) {
         //  when ice candidate is received, we'll update the offer and answer sdp and then send it back to the caller and callee
         if (peerType === 'caller') {
-          setOffer((prev) => [
-            ...prev,
-            peerConnection[peerConnection.length - 1]?.localDescription,
-          ]);
+          dispatch({
+            type: 'SET_OFFER',
+            payload: [
+              ...offer,
+              peerConnection[peerConnection.length - 1]?.localDescription,
+            ],
+          });
         } else if (peerType === 'receiver') {
-          setAnswer((prev) => [
-            ...prev,
-            peerConnection[peerConnection.length - 1]?.localDescription,
-          ]);
+          dispatch({
+            type: 'SET_ANSWER',
+            payload: [
+              ...answer,
+              peerConnection[peerConnection.length - 1]?.localDescription,
+            ],
+          });
         } else {
           throw new Error(
             'Peer type is not available, please look into generating ice candidate'
@@ -157,10 +178,10 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
   const hangup = async () => {
     // end the meeting for all clients
     if (!peerConnection[peerConnection.length - 1]) {
-      setInCall(false);
-      setOffer([]);
-      setAnswer([]);
-      setRemoteStreams([]);
+      dispatch({ type: 'SET_IN_CALL', payload: false });
+      dispatch({ type: 'SET_OFFER', payload: [] });
+      dispatch({ type: 'SET_ANSWER', payload: [] });
+      dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
 
       createPeerConnection();
       throw new Error('Peer connection is not available');
@@ -168,10 +189,10 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     for (const pc of peerConnection) {
       await pc.close();
     }
-    setInCall(false);
-    setOffer([]);
-    setAnswer([]);
-    setRemoteStreams([]);
+    dispatch({ type: 'SET_IN_CALL', payload: false });
+    dispatch({ type: 'SET_OFFER', payload: [] });
+    dispatch({ type: 'SET_ANSWER', payload: [] });
+    dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
 
     createPeerConnection();
   };
@@ -183,18 +204,19 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     await peerConnection[index].close();
     const offerCopy = [...offer];
     offerCopy.splice(index, 1);
-    setOffer(offerCopy);
+    dispatch({ type: 'SET_OFFER', payload: offerCopy });
 
     const answerCopy = [...answer];
     answerCopy.splice(index, 1);
-    setAnswer(answerCopy);
+    dispatch({ type: 'SET_ANSWER', payload: answerCopy });
 
     const updatedRemoteStreams = [...remoteStreams];
     updatedRemoteStreams.splice(index, 1);
-    setRemoteStreams(updatedRemoteStreams);
+    dispatch({ type: 'SET_REMOTE_STREAMS', payload: updatedRemoteStreams });
+
     const peerConnectionCopy = [...peerConnection];
     peerConnectionCopy.splice(index, 1);
-    setPeerConnection(peerConnectionCopy);
+    dispatch({ type: 'SET_PEER_CONNECTION', payload: peerConnectionCopy });
     console.log('Remote connection closed');
   };
 
@@ -213,12 +235,12 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       offerDescription
     );
 
-    const offer = {
+    const offerr = {
       sdp: offerDescription.sdp,
       type: offerDescription.type,
     };
 
-    setOffer((prev) => [...prev, offer]);
+    dispatch({ type: 'SET_OFFER', payload: [...offerr, offerr] });
   };
 
   const onAnswer = async (answer) => {
@@ -236,7 +258,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     await peerConnection[peerConnection.length - 1].setRemoteDescription(
       answerDescription
     );
-    setInCall(true);
+    dispatch({ type: 'SET_IN_CALL', payload: true });
   };
 
   const answerCall = async () => {
@@ -258,13 +280,11 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
         answerDescription
       );
 
-      const answer = {
+      const answerr = {
         sdp: answerDescription.sdp,
         type: answerDescription.type,
       };
-
-      console.log('answer created', answer);
-      setAnswer((prev) => [...prev, answer]);
+      dispatch({ type: 'SET_ANSWER', payload: [...answer, answerr] });
     } catch (error) {
       console.error('Error answering call:', error);
     }
@@ -278,7 +298,8 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           peerConnection,
           hostORClient,
           inCall,
-          setAnswer,
+          dispatch,
+          answer,
           createpeerConnectionForRemote,
         }}
       />
@@ -286,14 +307,13 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       <div className="call-section">
         <OfferAndAnswer
           {...{
-            offer,
-            setOffer,
             hostORClient,
             startCall,
             answerCall,
-            answer,
-            setAnswer,
             onAnswer,
+            offer,
+            answer,
+            dispatch,
           }}
         />
         <div className="local-remote-video-wraper">

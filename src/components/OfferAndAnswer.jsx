@@ -7,7 +7,7 @@ const OfferAndAnswer = ({
   startCall,
   answerCall,
   answer,
-  setAnswer,
+  dispatch,
   onAnswer,
 }) => {
   const copyText = (text) => {
@@ -26,7 +26,10 @@ const OfferAndAnswer = ({
               : ''
           }
           onChange={(e) => {
-            setOffer((prev) => [...prev, e.target.value]);
+            dispatch({
+              type: 'SET_OFFER',
+              payload: [...offer, e.target.value],
+            });
           }}
           rows="10"
           cols="50"
@@ -83,12 +86,15 @@ const OfferAndAnswer = ({
           }
           onChange={(e) => {
             if (answer.length === 1) {
-              setAnswer((prev) => [...prev, e.target.value]);
+              dispatch({
+                type: 'SET_ANSWER',
+                payload: [...answer, e.target.value],
+              });
             } else {
               const ans = [...answer];
               ans.pop();
               ans.push(e.target.value);
-              setAnswer(ans);
+              dispatch({ type: 'SET_ANSWER', payload: ans });
             }
           }}
           rows="10"

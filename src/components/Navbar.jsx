@@ -6,7 +6,8 @@ const Navbar = ({
   peerConnection,
   hostORClient,
   inCall,
-  setAnswer,
+  dispatch,
+  answer,
   createpeerConnectionForRemote,
 }) => {
   return (
@@ -25,7 +26,7 @@ const Navbar = ({
           <h1>
             {peerConnection[0]?.connectionState === 'new'
               ? hostORClient === 'host'
-                ? 'meeting not started'
+                ? 'Start a meeting'
                 : 'join a meeting'
               : peerConnection[0]?.connectionState ?? 'no state'}
           </h1>
@@ -36,7 +37,10 @@ const Navbar = ({
           className="button"
           style={{ width: 'fit-content', height: 'fit-content' }}
           onClick={() => {
-            setAnswer((prev) => [...prev, 'new remote video']);
+            dispatch({
+              type: 'SET_ANSWER',
+              payload: [...answer, 'clear this text and paste the answer'],
+            });
             createpeerConnectionForRemote();
           }}
         >
