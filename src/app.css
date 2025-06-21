@@ -151,8 +151,9 @@ button.back-arrow-button {
 }
 .overlay-button-container {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
+  gap: 15px;
   width: 100%;
   height: 100%;
   visibility: hidden;
@@ -171,7 +172,6 @@ button.back-arrow-button {
   border: none;
   cursor: pointer;
   display: flex;
-  font-size: '20px';
 }
 .pin-button {
   background-color: rgb(154, 154, 154);
@@ -180,7 +180,6 @@ button.back-arrow-button {
   border: none;
   cursor: pointer;
   display: flex;
-  font-size: '20px';
 }
 .remote-video-container {
   text-align: center;

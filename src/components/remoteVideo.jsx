@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 import { FaThumbtack } from 'react-icons/fa';
 import { FcEndCall } from 'react-icons/fc';
 import { ImPhoneHangUp } from 'react-icons/im';
+import observeWidth from './observeWidth';
+import OverlayButtonContainer from './OverlayButtonContainer';
 
 const RemoteVideo = ({
   index,
@@ -45,19 +47,7 @@ const RemoteVideo = ({
             })
           }
         >
-          <div className="overlay-button-container">
-            <button
-              onClick={() => {
-                hangupRemote(index);
-              }}
-              className="hangup-button"
-            >
-              <ImPhoneHangUp color="white" />
-            </button>
-            <button onClick={() => {}} className="pin-button">
-              <FaThumbtack color="rgb(50, 50, 50)" />
-            </button>
-          </div>
+          <OverlayButtonContainer {...{ hangupRemote, index }} />
         </div>
       </div>
       <p>{`${
