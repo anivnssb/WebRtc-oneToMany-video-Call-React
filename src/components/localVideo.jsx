@@ -11,9 +11,13 @@ const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
       <div className="video-wraper">
         <video ref={localVideoRef} autoPlay></video>
         <div className={inCall ? 'overlay' : ''}>
-          <div className="hangup-button-container">
+          <div className="overlay-button-container">
             <button onClick={hangup} className="hangup-button">
-              <ImPhoneHangUp size={50} color="white" onClick={hangup} />
+              <ImPhoneHangUp
+                // size={50}
+                color="white"
+                onClick={hangup}
+              />
             </button>
           </div>
         </div>
