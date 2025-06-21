@@ -1,9 +1,7 @@
-import { forwardRef, useEffect, useRef } from 'react';
-import { FaThumbtack } from 'react-icons/fa';
-import { FcEndCall } from 'react-icons/fc';
+import { useEffect, useRef } from 'react';
+import { FaThumbtack, FaThumbtackSlash } from 'react-icons/fa';
 import { ImPhoneHangUp } from 'react-icons/im';
-import observeWidth from './observeWidth';
-import OverlayButtonContainer from './OverlayButtonContainer';
+import useObserveWidth from '../hooks/useObserveWidth';
 
 const RemoteVideo = ({
   index,
@@ -14,6 +12,8 @@ const RemoteVideo = ({
   pinnedClient,
 }) => {
   const videoRef = useRef(null);
+  const overlayBtnContainerRef = useRef(null);
+  const [width] = useObserveWidth(overlayBtnContainerRef);
 
   useEffect(() => {
     if (videoRef.current && stream) {
@@ -47,9 +47,31 @@ const RemoteVideo = ({
             })
           }
         >
-          <OverlayButtonContainer
-            {...{ hangupRemote, index, pinnedClient, streamId: stream?.id }}
-          />
+          <div
+            className="overlay-button-container"
+            ref={overlayBtnContainerRef}
+          >
+            <button
+              onClick={() => {
+                hangupRemote(index);
+              }}
+              className="hangup-button"
+              style={{ padding: width * 0.05 }}
+            >
+              <ImPhoneHangUp color="white" size={width * 0.1} />
+            </button>
+            <button
+              onClick={() => {}}
+              className="pin-button"
+              style={{ padding: width * 0.05 }}
+            >
+              {pinnedClient !== stream?.Id ? (
+                <FaThumbtack color="rgb(50, 50, 50)" size={width * 0.1} />
+              ) : (
+                <FaThumbtackSlash color="rgb(50, 50, 50)" size={width * 0.1} />
+              )}
+            </button>
+          </div>
         </div>
       </div>
       <p>{`${
