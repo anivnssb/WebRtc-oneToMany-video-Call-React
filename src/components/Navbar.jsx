@@ -9,12 +9,16 @@ const Navbar = ({
   dispatch,
   answer,
   createpeerConnectionForRemote,
+  hangup,
 }) => {
   return (
     <div className="header">
       <button
         className="button back-arrow-button"
-        onClick={() => setHostORClient('')}
+        onClick={() => {
+          hangup();
+          setHostORClient('');
+        }}
       >
         {' '}
         <BackArrowIcon />
