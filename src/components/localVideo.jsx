@@ -1,7 +1,11 @@
 import { ImPhoneHangUp } from 'react-icons/im';
 import InfoIcon from './IIcon';
+import { useEffect, useRef } from 'react';
+import useObserveWidth from '../hooks/useObserveWidth';
 
 const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
+  const overlayBtnContainerRef = useRef(null);
+  const [width] = useObserveWidth(overlayBtnContainerRef);
   return (
     <div
       className={`local-video-container ${
@@ -11,10 +15,17 @@ const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
       <div className="video-wraper">
         <video ref={localVideoRef} autoPlay></video>
         <div className={inCall ? 'overlay' : ''}>
-          <div className="overlay-button-container">
-            <button onClick={hangup} className="hangup-button">
+          <div
+            className="overlay-button-container"
+            ref={overlayBtnContainerRef}
+          >
+            <button
+              onClick={hangup}
+              className="hangup-button"
+              style={{ padding: '10px' }}
+            >
               <ImPhoneHangUp
-                // size={50}
+                size={width * 0.1}
                 color="white"
                 onClick={hangup}
               />

@@ -146,7 +146,6 @@ button.back-arrow-button {
   align-items: center;
 }
 .overlay:hover {
-  visibility: visible;
   background: rgb(0, 0, 0, 0.75);
 }
 .overlay-button-container {
@@ -168,7 +167,6 @@ button.back-arrow-button {
 .hangup-button {
   background-color: red;
   border-radius: 100%;
-  padding: 7px;
   border: none;
   cursor: pointer;
   display: flex;
@@ -176,7 +174,6 @@ button.back-arrow-button {
 .pin-button {
   background-color: rgb(154, 154, 154);
   border-radius: 100%;
-  padding: 7px;
   border: none;
   cursor: pointer;
   display: flex;

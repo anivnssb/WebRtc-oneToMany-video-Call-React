@@ -39,15 +39,7 @@ const RemoteVideo = ({
           ref={videoRef}
           autoPlay
         ></video>
-        <div
-          className="overlay"
-          onClick={() =>
-            dispatch({
-              type: 'SET_PINNED_CLIENT',
-              payload: !pinnedClient ? stream?.id : null,
-            })
-          }
-        >
+        <div className="overlay">
           <div
             className="overlay-button-container"
             ref={overlayBtnContainerRef}
@@ -62,11 +54,16 @@ const RemoteVideo = ({
               <ImPhoneHangUp color="white" size={width * 0.1} />
             </button>
             <button
-              onClick={() => {}}
+              onClick={() =>
+                dispatch({
+                  type: 'SET_PINNED_CLIENT',
+                  payload: !pinnedClient ? stream?.id : null,
+                })
+              }
               className="pin-button"
               style={{ padding: width * 0.05 }}
             >
-              {pinnedClient !== stream?.Id ? (
+              {pinnedClient !== stream?.id ? (
                 <FaThumbtack color="rgb(50, 50, 50)" size={width * 0.1} />
               ) : (
                 <FaThumbtackSlash color="rgb(50, 50, 50)" size={width * 0.1} />

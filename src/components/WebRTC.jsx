@@ -283,6 +283,9 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       console.error('Error answering call:', error);
     }
   };
+  if (!hostORClient) {
+    return <></>;
+  }
   return (
     <div className="App">
       <Navbar
