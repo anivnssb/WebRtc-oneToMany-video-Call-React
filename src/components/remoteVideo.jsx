@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { FaThumbtack, FaThumbtackSlash } from 'react-icons/fa';
+import { FaThumbtack } from 'react-icons/fa';
 import { ImPhoneHangUp } from 'react-icons/im';
 import useObserveWidth from '../hooks/useObserveWidth';
+import { FaThumbtackSlash } from 'react-icons/fa6';
 
 const RemoteVideo = ({
   index,
