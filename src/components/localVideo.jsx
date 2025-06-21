@@ -22,7 +22,7 @@ const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
             <button
               onClick={hangup}
               className="hangup-button"
-              style={{ padding: '10px' }}
+              style={{ padding: width * 0.05 }}
             >
               <ImPhoneHangUp
                 size={width * 0.1}
