@@ -47,7 +47,9 @@ const RemoteVideo = ({
             })
           }
         >
-          <OverlayButtonContainer {...{ hangupRemote, index }} />
+          <OverlayButtonContainer
+            {...{ hangupRemote, index, pinnedClient, streamId: stream?.id }}
+          />
         </div>
       </div>
       <p>{`${

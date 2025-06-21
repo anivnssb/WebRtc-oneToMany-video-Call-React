@@ -2,9 +2,10 @@ import React, { forwardRef, useEffect } from 'react';
 import { FaThumbtack } from 'react-icons/fa';
 import { ImPhoneHangUp } from 'react-icons/im';
 import observeWidth from './observeWidth';
+import { FaThumbtackSlash } from 'react-icons/fa6';
 
 const OverlayButtonContainer = (
-  { hangupRemote, index, width },
+  { hangupRemote, index, pinnedClient, streamId, width },
   forwardedRefFromParrent
 ) => {
   return (
@@ -23,7 +24,11 @@ const OverlayButtonContainer = (
         className="pin-button"
         style={{ padding: width * 0.05 }}
       >
-        <FaThumbtack color="rgb(50, 50, 50)" size={width * 0.1} />
+        {pinnedClient !== streamId ? (
+          <FaThumbtack color="rgb(50, 50, 50)" size={width * 0.1} />
+        ) : (
+          <FaThumbtackSlash color="rgb(50, 50, 50)" size={width * 0.1} />
+        )}
       </button>
     </div>
   );
