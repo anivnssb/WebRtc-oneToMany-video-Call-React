@@ -1,4 +1,4 @@
-import BackArrowIcon from './BackArrowIcon';
+import BackArrowIcon from '../components/icons/BackArrowIcon';
 
 const Navbar = ({
   setHostORClient,

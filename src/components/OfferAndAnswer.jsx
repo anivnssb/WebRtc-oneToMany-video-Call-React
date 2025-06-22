@@ -1,4 +1,4 @@
-import InfoIcon from './IIcon';
+import InfoIcon from '../components/icons/IIcon';
 
 const OfferAndAnswer = ({
   offer,

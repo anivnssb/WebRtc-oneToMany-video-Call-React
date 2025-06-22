@@ -1,6 +1,5 @@
 import { ImPhoneHangUp } from 'react-icons/im';
-import InfoIcon from './IIcon';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import useObserveWidth from '../hooks/useObserveWidth';
 
 const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
