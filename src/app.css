@@ -125,8 +125,7 @@ button.back-arrow-button {
 }
 .local-video-container {
   text-align: center;
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 10px;
 }
 
 .video-wraper {
@@ -147,6 +146,7 @@ button.back-arrow-button {
 
 .remote-video-container {
   text-align: center;
+  margin-bottom: 10px;
 }
 .remote-video-container .video-wraper video {
   width: 90%;
