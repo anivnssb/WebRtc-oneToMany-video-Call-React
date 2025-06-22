@@ -2,7 +2,6 @@ import InfoIcon from '../components/icons/IIcon';
 
 const OfferAndAnswer = ({
   offer,
-  setOffer,
   hostORClient,
   startCall,
   answerCall,
@@ -16,10 +15,9 @@ const OfferAndAnswer = ({
   return (
     <div className="offer-and-answer-container">
       {/* OFFER */}
-      <div>
-        <div>Offer</div>
+      <div className="offer-answer">
+        <h3>Offer</h3>
         <textarea
-          style={{ width: '260px' }}
           value={
             offer[offer.length - 1]
               ? JSON.stringify(offer[offer.length - 1])
@@ -47,18 +45,19 @@ const OfferAndAnswer = ({
             </button>
           </div>
         ) : (
-          <button
-            className="button connect-buttons"
-            onClick={() => answerCall('test')}
-          >
-            Answer Call{' '}
-          </button>
+          <div className="connect-buttons-container">
+            <button
+              className="button connect-buttons"
+              onClick={() => answerCall('test')}
+            >
+              Answer Call{' '}
+            </button>
+          </div>
         )}
       </div>
-      <div>
-        <div>Answer</div>
+      <div className="offer-answer">
+        <h3>Answer</h3>
         <textarea
-          style={{ width: '260px' }}
           value={
             answer[answer.length - 1]
               ? JSON.stringify(answer[answer.length - 1])
@@ -81,7 +80,7 @@ const OfferAndAnswer = ({
           cols="50"
         />
 
-        <div>
+        <div className="connect-buttons-container">
           {hostORClient === 'host' ? (
             <button
               className="button connect-buttons"
