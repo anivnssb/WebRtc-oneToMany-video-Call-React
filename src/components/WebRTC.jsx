@@ -333,6 +333,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
                     hostORClient,
                     dispatch,
                     pinnedClient,
+                    inCall,
                   }}
                   key={index + 'remote-video-component'}
                 />

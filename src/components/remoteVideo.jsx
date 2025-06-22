@@ -3,6 +3,7 @@ import { FaThumbtack } from 'react-icons/fa';
 import { ImPhoneHangUp } from 'react-icons/im';
 import useObserveWidth from '../hooks/useObserveWidth';
 import { FaThumbtackSlash } from 'react-icons/fa6';
+import SpinnerIcon from './icons/SpinnerIcon';
 
 const RemoteVideo = ({
   index,
@@ -11,6 +12,7 @@ const RemoteVideo = ({
   hostORClient,
   dispatch,
   pinnedClient,
+  inCall,
 }) => {
   const videoRef = useRef(null);
   const overlayBtnContainerRef = useRef(null);
@@ -70,6 +72,7 @@ const RemoteVideo = ({
               )}
             </button>
           </div>
+          {!inCall ? <SpinnerIcon /> : ''}
         </div>
       </div>
       <p>{`${
