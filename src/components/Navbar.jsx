@@ -23,7 +23,7 @@ const Navbar = ({
         {' '}
         <BackArrowIcon />
       </button>
-      <div className="connection-status">
+      {/* <div className="connection-status">
         {waitingForPeer ? (
           <h2> waiting for peer to respond... </h2>
         ) : (
@@ -35,7 +35,7 @@ const Navbar = ({
               : peerConnection[0]?.connectionState ?? 'no state'}
           </h1>
         )}
-      </div>
+      </div> */}
       {hostORClient === 'host' && inCall ? (
         <button
           className="button"
