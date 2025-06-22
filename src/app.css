@@ -26,7 +26,7 @@ body {
   flex-direction: column;
   align-items: center;
 }
-.header {
+.navbar {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -35,6 +35,7 @@ body {
   position: sticky;
   top: 0px;
   background-color: #360133;
+  z-index: 999;
 }
 .button {
   background: linear-gradient(90deg, #6a0045, #280021);
@@ -190,28 +191,6 @@ button.back-arrow-button {
 }
 .remote-video-container.pinned-client video {
   width: 600px !important;
-}
-
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
-
-  position: absolute;
-  z-index: 1;
-}
-.tooltip:hover .tooltiptext {
-  visibility: visible;
 }
 
 @media screen and (max-width: 938px) {
