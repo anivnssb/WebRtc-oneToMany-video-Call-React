@@ -9,6 +9,8 @@ const Navbar = ({
   answer,
   createpeerConnectionForRemote,
   hangup,
+  peerConnection,
+  offer,
 }) => {
   return (
     <div className="navbar">
@@ -41,6 +43,9 @@ const Navbar = ({
             className="add-new-client"
             style={{ width: 'fit-content', height: 'fit-content' }}
             onClick={() => {
+              if (offer.length !== peerConnection.length) {
+                return;
+              }
               dispatch({
                 type: 'SET_ANSWER',
                 payload: [

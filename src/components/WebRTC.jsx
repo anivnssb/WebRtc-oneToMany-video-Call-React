@@ -100,6 +100,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       });
     };
     dispatch({ type: 'SET_PEER_CONNECTION', payload: [...peerConnection, pc] });
+    console.log('createpeerConnectionForRemote created');
   };
   const createPeerConnection = async () => {
     // This function is used to create a new peer connection for the firt time
@@ -300,6 +301,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           setHostORClient,
           waitingForPeer,
           peerConnection,
+          offer,
           hostORClient,
           inCall,
           dispatch,
