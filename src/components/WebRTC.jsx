@@ -7,6 +7,7 @@ import Navbar from './Navbar';
 import { initialState, reducerFunction } from '../state/stateAndReducer';
 import RemoteVideo from './remoteVideo';
 import PinnedVideo from './PinnedVideo';
+import { FaAnglesRight } from 'react-icons/fa6';
 const WebRTC = ({ hostORClient, setHostORClient }) => {
   const [state, dispatch] = useReducer(reducerFunction, initialState);
   const {
@@ -17,6 +18,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     offer,
     answer,
     pinnedClient,
+    offerAnswerVisibile,
   } = state;
 
   const localVideoRef = useRef(null);
@@ -308,6 +310,18 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       />
 
       <div className="call-section">
+        {!offerAnswerVisibile ? (
+          <div
+            className="offer-answer-expand-icon"
+            onClick={() =>
+              dispatch({ type: 'OFFER_ANSWER_VISIBLE', payload: true })
+            }
+          >
+            <FaAnglesRight />
+          </div>
+        ) : (
+          ''
+        )}
         <OfferAndAnswer
           {...{
             hostORClient,
@@ -317,6 +331,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             offer,
             answer,
             dispatch,
+            offerAnswerVisibile,
           }}
         />
         <div className="pinned-state">

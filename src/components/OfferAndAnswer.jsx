@@ -1,3 +1,4 @@
+import { FaXmark } from 'react-icons/fa6';
 import InfoIcon from '../components/icons/IIcon';
 
 const OfferAndAnswer = ({
@@ -8,12 +9,25 @@ const OfferAndAnswer = ({
   answer,
   dispatch,
   onAnswer,
+  offerAnswerVisibile,
 }) => {
   const copyText = (text) => {
     navigator.clipboard.writeText(text);
   };
   return (
-    <div className="offer-and-answer-container">
+    <div
+      className={`offer-and-answer-container ${
+        offerAnswerVisibile ? 'offer-answer-visibile' : ''
+      }`}
+    >
+      <div
+        className="offer-answer-close-icon"
+        onClick={() =>
+          dispatch({ type: 'OFFER_ANSWER_VISIBLE', payload: false })
+        }
+      >
+        <FaXmark />
+      </div>
       {/* OFFER */}
       <div className="offer-answer">
         <h3>Offer</h3>

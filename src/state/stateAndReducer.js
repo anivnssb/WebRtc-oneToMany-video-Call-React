@@ -6,6 +6,7 @@ export const initialState = {
   offer: [],
   answer: [],
   pinnedClient: null,
+  offerAnswerVisibile: true,
 };
 
 export const reducerFunction = (state, action) => {
@@ -26,6 +27,8 @@ export const reducerFunction = (state, action) => {
       return { ...state, answer: action.payload };
     case 'SET_PINNED_CLIENT':
       return { ...state, pinnedClient: action.payload };
+    case 'OFFER_ANSWER_VISIBLE':
+      return { ...state, offerAnswerVisibile: action.payload };
     default:
       return state;
   }

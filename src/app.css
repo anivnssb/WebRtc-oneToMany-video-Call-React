@@ -139,12 +139,44 @@ button.back-arrow-button svg:hover {
 .offer-and-answer-container {
   background: rgb(20, 21, 20);
   height: fit-content;
+  width: fit-content;
   padding: 10px;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  display: none;
+}
+.call-section {
+  position: relative;
+}
+.offer-answer-expand-icon {
+  position: absolute;
+  top: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.offer-answer-expand-icon:hover {
+  color: rgb(59, 131, 255);
+}
+.offer-answer-close-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.offer-answer-close-icon:hover {
+  color: rgb(59, 131, 255);
+}
+
+.offer-and-answer-container.offer-answer-visibile {
+  display: flex;
 }
 .offer-answer {
   padding-top: 10px;
@@ -185,6 +217,7 @@ button.back-arrow-button svg:hover {
 .local-video-container {
   text-align: center;
   margin-bottom: 10px;
+  width: fit-content;
 }
 
 .video-wraper {
@@ -205,6 +238,7 @@ button.back-arrow-button svg:hover {
 .remote-video-container {
   text-align: center;
   margin-bottom: 10px;
+  width: fit-content;
 }
 .remote-video-container .video-wraper video {
   width: 90%;
@@ -272,22 +306,14 @@ button.back-arrow-button svg:hover {
   }
 }
 
-@media screen and (min-width: 860px) {
+@media screen and (min-width: 764px) {
   .call-section {
     flex-direction: row;
   }
   .local-video-container.not-connected .video-wraper video {
     width: 60% !important;
   }
-  .local-remote-video-wraper {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
-  .local-remote-video-wraper.pinned {
-    margin-right: 10px;
-    max-height: 80vh;
-    overflow-y: scroll;
-  }
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .local-remote-video-wraper.pinned ::-webkit-scrollbar {
     display: none;
@@ -301,30 +327,45 @@ button.back-arrow-button svg:hover {
     display: flex;
   }
   .pinned-section {
-    display: block;
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
   .pinned-state {
     display: flex;
     flex-direction: row;
     width: 100%;
   }
-  .pinned-section video {
-    width: 400px !important;
+  .local-remote-video-wraper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
-}
-
-@media screen and (min-width: 1000px) {
-  .pinned-section video {
-    width: 500px !important;
+  .local-remote-video-wraper.pinned {
+    display: block;
+    margin-right: 10px;
+    margin-left: 15px;
+    max-height: 80vh;
+    overflow-y: scroll;
+    max-width: 20%;
   }
-}
-@media screen and (min-width: 1200px) {
   .pinned-section video {
     width: 550px !important;
   }
 }
+
+@media screen and (min-width: 860px) {
+  .pinned-section video {
+    width: 650px !important;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .pinned-section video {
+    width: 750px !important;
+  }
+}
 @media screen and (min-width: 1300px) {
   .pinned-section video {
-    width: 700px !important;
+    width: 800px !important;
   }
 }
