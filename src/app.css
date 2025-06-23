@@ -67,31 +67,29 @@ h2 {
   background: linear-gradient(90deg, rgb(255, 73, 1), rgb(225, 253, 9));
   border-radius: 25px;
   border: none;
-  box-shadow: 0 1px 5px rgba(255, 255, 255, 0.3); /* X, Y, blur, color */
-  padding: 10px 15px;
+  padding: 7px 15px;
   color: #000000;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease;
 }
 .button-one:active,
 .button-one:hover {
   transform: scale(0.96);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(90deg, rgb(220, 63, 2), rgb(183, 206, 7));
 }
 .button-two {
   background: linear-gradient(90deg, rgb(2, 46, 123), rgb(41, 0, 75));
   border-radius: 25px;
   border: none;
-  box-shadow: 0 4px 5px rgba(255, 255, 255, 0.05); /* X, Y, blur, color */
-  padding: 10px 15px;
+  padding: 7px 15px;
   color: #c0bdbd;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease;
 }
 .button-two:active,
 .button-two:hover {
   transform: scale(0.96);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(90deg, rgb(1, 30, 80), rgb(18, 0, 33));
 }
 
 button.back-arrow-button {
@@ -126,11 +124,6 @@ button.back-arrow-button svg:hover {
   gap: 10px;
   margin-top: 10px;
 }
-.button.connect-buttons {
-  padding: 5px 5px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
 
 .call-section {
   display: flex;
@@ -147,6 +140,7 @@ button.back-arrow-button svg:hover {
   height: fit-content;
   width: fit-content;
   padding: 10px;
+  padding-bottom: 20px;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
