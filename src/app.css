@@ -57,6 +57,12 @@ h2 {
   z-index: 999;
   background: rgb(20, 21, 20);
 }
+.navbar-right-side {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
 .button-one {
   background: linear-gradient(90deg, rgb(255, 73, 1), rgb(225, 253, 9));
   border-radius: 25px;
@@ -147,18 +153,16 @@ button.back-arrow-button svg:hover {
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 0;
-  left: 0;
   right: 0;
-  z-index: 99;
-  display: none;
+  z-index: 999;
+  transform: scaleY(0);
 }
 .call-section {
   position: relative;
 }
 .offer-answer-expand-icon {
-  position: absolute;
-  top: 0;
+  padding-right: 10px;
+  cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
 }
 .offer-answer-expand-icon:hover {
@@ -175,9 +179,14 @@ button.back-arrow-button svg:hover {
   color: rgb(59, 131, 255);
 }
 
-.offer-and-answer-container.offer-answer-visibile {
-  display: flex;
+.offer-and-answer-container.offer-answer-expanded {
+  overflow: hidden;
+  transition: transform 0.2s ease-out;
+  height: auto;
+  transform: scaleY(1);
+  transform-origin: top;
 }
+
 .offer-answer {
   padding-top: 10px;
   width: 85%;

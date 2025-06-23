@@ -1,9 +1,8 @@
+import { FaAnglesDown } from 'react-icons/fa6';
 import BackArrowIcon from '../components/icons/BackArrowIcon';
 
 const Navbar = ({
   setHostORClient,
-  waitingForPeer,
-  peerConnection,
   hostORClient,
   inCall,
   dispatch,
@@ -36,26 +35,37 @@ const Navbar = ({
           </h1>
         )}
       </div> */}
-      {hostORClient === 'host' && inCall ? (
-        <button
-          className="add-new-client"
-          style={{ width: 'fit-content', height: 'fit-content' }}
-          onClick={() => {
-            dispatch({
-              type: 'SET_ANSWER',
-              payload: [
-                ...answer,
-                'clear this text and paste the answer from the new clent',
-              ],
-            });
-            createpeerConnectionForRemote();
-          }}
+      <div className="navbar-right-side">
+        {hostORClient === 'host' && inCall ? (
+          <button
+            className="add-new-client"
+            style={{ width: 'fit-content', height: 'fit-content' }}
+            onClick={() => {
+              dispatch({
+                type: 'SET_ANSWER',
+                payload: [
+                  ...answer,
+                  'clear this text and paste the answer from the new clent',
+                ],
+              });
+              createpeerConnectionForRemote();
+            }}
+          >
+            Add new client{' '}
+          </button>
+        ) : (
+          ''
+        )}
+
+        <div
+          className="offer-answer-expand-icon"
+          onClick={() =>
+            dispatch({ type: 'OFFER_ANSWER_VISIBLE', payload: true })
+          }
         >
-          Add new client{' '}
-        </button>
-      ) : (
-        ''
-      )}
+          <FaAnglesDown />
+        </div>
+      </div>
     </div>
   );
 };

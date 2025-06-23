@@ -310,18 +310,6 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       />
 
       <div className="call-section">
-        {!offerAnswerVisibile ? (
-          <div
-            className="offer-answer-expand-icon"
-            onClick={() =>
-              dispatch({ type: 'OFFER_ANSWER_VISIBLE', payload: true })
-            }
-          >
-            <FaAnglesRight />
-          </div>
-        ) : (
-          ''
-        )}
         <OfferAndAnswer
           {...{
             hostORClient,

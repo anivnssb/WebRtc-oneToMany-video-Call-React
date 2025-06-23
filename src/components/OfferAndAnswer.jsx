@@ -17,7 +17,7 @@ const OfferAndAnswer = ({
   return (
     <div
       className={`offer-and-answer-container ${
-        offerAnswerVisibile ? 'offer-answer-visibile' : ''
+        offerAnswerVisibile ? 'offer-answer-expanded' : ''
       }`}
     >
       <div
