@@ -196,6 +196,10 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     if (!peerConnection[index]) {
       throw new Error('Peer connection is not available');
     }
+    if (answer.length === 1) {
+      hangup();
+      return;
+    }
     await peerConnection[index].close();
     const offerCopy = [...offer];
     offerCopy.splice(index, 1);

@@ -38,7 +38,7 @@ const Navbar = ({
       </div> */}
       {hostORClient === 'host' && inCall ? (
         <button
-          className="button"
+          className="add-new-client"
           style={{ width: 'fit-content', height: 'fit-content' }}
           onClick={() => {
             dispatch({

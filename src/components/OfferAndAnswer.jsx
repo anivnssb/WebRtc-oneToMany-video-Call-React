@@ -34,11 +34,14 @@ const OfferAndAnswer = ({
         />
         {hostORClient === 'host' ? (
           <div className="connect-buttons-container">
-            <button className="button connect-buttons" onClick={startCall}>
+            <button
+              className="button-two connect-buttons disable-text-selection"
+              onClick={startCall}
+            >
               Start Call{' '}
             </button>
             <button
-              className="button connect-buttons"
+              className="button-two connect-buttons disable-text-selection"
               onClick={() => copyText(JSON.stringify(offer[offer.length - 1]))}
             >
               Copy Offer{' '}
@@ -47,7 +50,7 @@ const OfferAndAnswer = ({
         ) : (
           <div className="connect-buttons-container">
             <button
-              className="button connect-buttons"
+              className="button-two connect-buttons disable-text-selection"
               onClick={() => answerCall('test')}
             >
               Answer Call{' '}
@@ -83,7 +86,7 @@ const OfferAndAnswer = ({
         <div className="connect-buttons-container">
           {hostORClient === 'host' ? (
             <button
-              className="button connect-buttons"
+              className="button-two connect-buttons disable-text-selection"
               onClick={() => onAnswer(JSON.parse(answer[answer.length - 1]))}
             >
               Connect{' '}
@@ -93,7 +96,7 @@ const OfferAndAnswer = ({
           )}
           {hostORClient === 'client' ? (
             <button
-              className="button connect-buttons"
+              className="button-two connect-buttons disable-text-selection"
               onClick={() =>
                 copyText(JSON.stringify(answer[answer.length - 1]))
               }

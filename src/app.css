@@ -4,46 +4,115 @@
 }
 body {
   font-family: Arial, sans-serif;
-  background-color: #110513;
-  color: #0d0c0b;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+.disable-text-selection {
+  user-select: none;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none;
 }
 .Landing {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  gap: 20px;
   align-items: center;
+  gap: 20px;
   height: 100vh;
-  flex-direction: row;
-  background: linear-gradient(#280021, #000000);
 }
-.select-host-or-client {
-  background-color: #088f8f;
+.landing-text {
+  color: #ffffff;
+  text-align: center;
   padding: 20px;
-  border-radius: 10px;
-  width: 50vw;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 20px;
 }
+.landing-text h1 {
+  color: rgb(82, 255, 157);
+  font-weight: 900;
+}
+.landing-text,
+h2 {
+  color: rgb(255, 255, 255);
+}
+.landing-h2-second {
+  color: rgb(255, 255, 255);
+}
+
 .navbar {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
+  padding-left: 0px;
   position: sticky;
   top: 0px;
-  background-color: #360133;
   z-index: 999;
+  background: rgb(6, 10, 8);
 }
-.button {
-  background: linear-gradient(90deg, #6a0045, #280021);
+.button-one {
+  background: linear-gradient(90deg, rgb(255, 73, 1), rgb(225, 253, 9));
   border-radius: 25px;
+  border: none;
+  box-shadow: 0 1px 5px rgba(255, 255, 255, 0.3); /* X, Y, blur, color */
   padding: 10px 15px;
-  color: #f8f9fa;
+  color: #000000;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+.button-one:active,
+.button-one:hover {
+  transform: scale(0.96);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+.button-two {
+  background: linear-gradient(90deg, rgb(2, 46, 123), rgb(41, 0, 75));
+  border-radius: 25px;
+  border: none;
+  box-shadow: 0 4px 5px rgba(255, 255, 255, 0.05); /* X, Y, blur, color */
+  padding: 10px 15px;
+  color: #c0bdbd;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.button-two:active,
+.button-two:hover {
+  transform: scale(0.96);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
 button.back-arrow-button {
   padding: 5px 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+button.back-arrow-button svg {
+  fill: rgb(255, 255, 255) !important;
+  transition: transform 0.2s ease, fill 0.2s ease;
+}
+button.back-arrow-button svg:hover {
+  fill: rgb(2, 46, 123) !important;
+}
+.add-new-client {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  border-radius: 25px;
+  padding: 7px;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.3s ease;
+}
+.add-new-client:hover {
+  border: 2px solid rgb(2, 46, 123);
+  color: rgb(2, 46, 123);
 }
 .connect-buttons-container {
   display: flex;
@@ -56,17 +125,7 @@ button.back-arrow-button {
   margin-top: 5px;
   margin-bottom: 5px;
 }
-.connection-status {
-  color: #f8f9fa;
-  padding: 5px 10px;
-  border-radius: 5px;
-  width: 40vw;
-  margin: auto;
-}
-.connection-status span {
-  margin-left: 10px;
-  color: #333;
-}
+
 .call-section {
   display: flex;
   flex-direction: column;
@@ -78,7 +137,7 @@ button.back-arrow-button {
 }
 
 .offer-and-answer-container {
-  background: linear-gradient(#280021, #360133);
+  background: rgb(6, 10, 8);
   height: fit-content;
   padding: 10px;
   border-radius: 15px;
@@ -101,9 +160,9 @@ button.back-arrow-button {
   width: 80%;
   padding: 10px;
   margin-top: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   border: none;
-  background-color: #26011f;
+  background-color: #000000;
   color: #f8f9fa;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -136,7 +195,7 @@ button.back-arrow-button {
 
 .local-video-container .video-wraper video {
   width: 90%;
-  border: 5px solid #e29a65;
+  border: 5px solid rgb(6, 10, 8);
   border-radius: 25px;
 }
 .local-video-container.not-conneted .video-wraper video {
@@ -150,7 +209,6 @@ button.back-arrow-button {
 }
 .remote-video-container .video-wraper video {
   width: 90%;
-  border: 5px solid #e29a65;
   border-radius: 25px;
 }
 .remote-video-container.client-pinned .video-wraper video {
