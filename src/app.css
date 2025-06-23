@@ -55,7 +55,7 @@ h2 {
   position: sticky;
   top: 0px;
   z-index: 999;
-  background: rgb(6, 10, 8);
+  background: rgb(20, 21, 20);
 }
 .button-one {
   background: linear-gradient(90deg, rgb(255, 73, 1), rgb(225, 253, 9));
@@ -95,11 +95,11 @@ button.back-arrow-button {
   cursor: pointer;
 }
 button.back-arrow-button svg {
-  fill: rgb(255, 255, 255) !important;
+  fill: rgb(255, 255, 255);
   transition: transform 0.2s ease, fill 0.2s ease;
 }
 button.back-arrow-button svg:hover {
-  fill: rgb(2, 46, 123) !important;
+  fill: rgb(59, 131, 255);
 }
 .add-new-client {
   background-color: transparent;
@@ -111,8 +111,8 @@ button.back-arrow-button svg:hover {
   transition: transform 0.2s ease, border-color 0.3s ease;
 }
 .add-new-client:hover {
-  border: 2px solid rgb(2, 46, 123);
-  color: rgb(2, 46, 123);
+  border: 2px solid rgb(59, 131, 255);
+  color: rgb(59, 131, 255);
 }
 .connect-buttons-container {
   display: flex;
@@ -137,7 +137,7 @@ button.back-arrow-button svg:hover {
 }
 
 .offer-and-answer-container {
-  background: rgb(6, 10, 8);
+  background: rgb(20, 21, 20);
   height: fit-content;
   padding: 10px;
   border-radius: 15px;
@@ -199,7 +199,7 @@ button.back-arrow-button svg:hover {
   border-radius: 25px;
 }
 .local-video-container.not-connected .video-wraper video {
-  width: 60% !important;
+  width: 90% !important;
 }
 
 .remote-video-container {
@@ -276,14 +276,26 @@ button.back-arrow-button svg:hover {
   .call-section {
     flex-direction: row;
   }
+  .local-video-container.not-connected .video-wraper video {
+    width: 60% !important;
+  }
   .local-remote-video-wraper {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
   .local-remote-video-wraper.pinned {
-    display: flex;
-    flex-direction: column;
     margin-right: 10px;
+    max-height: 80vh;
+    overflow-y: scroll;
+  }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .local-remote-video-wraper.pinned ::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .local-remote-video-wraper.pinned {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
   .pin-button {
     display: flex;
@@ -313,6 +325,6 @@ button.back-arrow-button svg:hover {
 }
 @media screen and (min-width: 1300px) {
   .pinned-section video {
-    width: 750px !important;
+    width: 700px !important;
   }
 }

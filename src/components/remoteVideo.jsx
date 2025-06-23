@@ -42,43 +42,37 @@ const RemoteVideo = ({
           autoPlay
         ></video>
         <div className="overlay">
-          {inCall ? (
-            <div
-              className="overlay-button-container"
-              ref={overlayBtnContainerRef}
+          <div
+            className="overlay-button-container"
+            ref={overlayBtnContainerRef}
+          >
+            <button
+              onClick={() => {
+                hangupRemote(index);
+              }}
+              className="hangup-button"
+              style={{ padding: width * 0.05 }}
             >
-              <button
-                onClick={() => {
-                  hangupRemote(index);
-                }}
-                className="hangup-button"
-                style={{ padding: width * 0.05 }}
-              >
-                <ImPhoneHangUp color="white" size={width * 0.1} />
-              </button>
-              <button
-                onClick={() =>
-                  dispatch({
-                    type: 'SET_PINNED_CLIENT',
-                    payload: pinnedClient === stream?.id ? null : stream?.id,
-                  })
-                }
-                className="pin-button"
-                style={{ padding: width * 0.05 }}
-              >
-                {pinnedClient !== stream?.id ? (
-                  <FaThumbtack color="rgb(50, 50, 50)" size={width * 0.1} />
-                ) : (
-                  <FaThumbtackSlash
-                    color="rgb(50, 50, 50)"
-                    size={width * 0.1}
-                  />
-                )}
-              </button>
-            </div>
-          ) : (
-            ''
-          )}
+              <ImPhoneHangUp color="white" size={width * 0.1} />
+            </button>
+            <button
+              onClick={() =>
+                dispatch({
+                  type: 'SET_PINNED_CLIENT',
+                  payload: pinnedClient === stream?.id ? null : stream?.id,
+                })
+              }
+              className="pin-button"
+              style={{ padding: width * 0.05 }}
+            >
+              {pinnedClient !== stream?.id ? (
+                <FaThumbtack color="rgb(50, 50, 50)" size={width * 0.1} />
+              ) : (
+                <FaThumbtackSlash color="rgb(50, 50, 50)" size={width * 0.1} />
+              )}
+            </button>
+          </div>
+
           {!inCall ? <SpinnerIcon /> : ''}
         </div>
       </div>

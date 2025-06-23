@@ -332,6 +332,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
                 hangup,
                 pinnedClient,
               }}
+              key="localvdo-123"
             />
             {remoteStreams.length
               ? remoteStreams.map((stream, index) => (
