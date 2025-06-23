@@ -198,9 +198,8 @@ button.back-arrow-button svg:hover {
   border: 5px solid rgb(6, 10, 8);
   border-radius: 25px;
 }
-.local-video-container.not-conneted .video-wraper video {
-}
-.local-video-container.client-pinned .video-wraper video {
+.local-video-container.not-connected .video-wraper video {
+  width: 60% !important;
 }
 
 .remote-video-container {
@@ -210,10 +209,6 @@ button.back-arrow-button svg:hover {
 .remote-video-container .video-wraper video {
   width: 90%;
   border-radius: 25px;
-}
-.remote-video-container.client-pinned .video-wraper video {
-}
-.remote-video-container.pinned-client .video-wraper video {
 }
 
 .overlay {
@@ -260,6 +255,9 @@ button.back-arrow-button svg:hover {
   display: flex;
   display: none;
 }
+.pinned-section {
+  display: none;
+}
 
 .spinner-icon {
   animation: spin 1s linear infinite;
@@ -274,45 +272,47 @@ button.back-arrow-button svg:hover {
   }
 }
 
-/* 
-@media screen and (max-width: 938px) {
+@media screen and (min-width: 860px) {
   .call-section {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
   }
-  .offer-and-answer-container {
-    width: 100%;
+  .local-remote-video-wraper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  .local-remote-video-wraper.pinned {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+  }
+  .pin-button {
+    display: flex;
+  }
+  .pinned-section {
+    display: block;
+  }
+  .pinned-state {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
+    width: 100%;
+  }
+  .pinned-section video {
+    width: 400px !important;
   }
 }
-@media screen and (max-width: 600px) {
-  .offer-and-answer-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
-  .local-video-container.not-conneted video {
-    width: 100% !important;
-  }
 
-  .local-video-container video {
-    width: 100% !important;
+@media screen and (min-width: 1000px) {
+  .pinned-section video {
+    width: 500px !important;
   }
-  .local-video-container.client-pinned video {
-    width: 100% !important;
+}
+@media screen and (min-width: 1200px) {
+  .pinned-section video {
+    width: 550px !important;
   }
-
-  .remote-video-container video {
-    width: 100% !important;
+}
+@media screen and (min-width: 1300px) {
+  .pinned-section video {
+    width: 750px !important;
   }
-  .remote-video-container.pinned-client video {
-    width: 100% !important;
-  }
-  .remote-video-container.client-pinned video {
-    width: 100% !important;
-  }
-} */
+}

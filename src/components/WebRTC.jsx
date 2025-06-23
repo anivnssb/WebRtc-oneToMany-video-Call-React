@@ -6,6 +6,7 @@ import Landing from './Landing';
 import Navbar from './Navbar';
 import { initialState, reducerFunction } from '../state/stateAndReducer';
 import RemoteVideo from './remoteVideo';
+import PinnedVideo from './PinnedVideo';
 const WebRTC = ({ hostORClient, setHostORClient }) => {
   const [state, dispatch] = useReducer(reducerFunction, initialState);
   const {
@@ -318,31 +319,58 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             dispatch,
           }}
         />
-        <div className="local-remote-video-wraper">
-          <LocalVideo
-            {...{
-              localVideoRef,
-              inCall,
-              hangup,
-              pinnedClient,
-            }}
-          />
-          {remoteStreams.length
-            ? remoteStreams.map((stream, index) => (
-                <RemoteVideo
-                  {...{
-                    stream,
-                    index,
-                    hangupRemote,
-                    hostORClient,
-                    dispatch,
-                    pinnedClient,
-                    inCall,
-                  }}
-                  key={index + 'remote-video-component'}
-                />
-              ))
-            : ''}
+        <div className="pinned-state">
+          <div
+            className={`local-remote-video-wraper ${
+              pinnedClient ? 'pinned' : ''
+            }`}
+          >
+            <LocalVideo
+              {...{
+                localVideoRef,
+                inCall,
+                hangup,
+                pinnedClient,
+              }}
+            />
+            {remoteStreams.length
+              ? remoteStreams.map((stream, index) => (
+                  <RemoteVideo
+                    {...{
+                      stream,
+                      index,
+                      hangupRemote,
+                      hostORClient,
+                      dispatch,
+                      pinnedClient,
+                      inCall,
+                    }}
+                    key={index + 'remote-video-component'}
+                  />
+                ))
+              : ''}
+          </div>
+          {pinnedClient ? (
+            <div className="pinned-section">
+              <PinnedVideo
+                {...{
+                  pinnedClient,
+                  hangupRemote,
+                  dispatch,
+                  hostORClient,
+                  stream:
+                    remoteStreams[
+                      remoteStreams.findIndex(({ id }) => id === pinnedClient)
+                    ],
+                  index: remoteStreams.findIndex(
+                    ({ id }) => id === pinnedClient
+                  ),
+                }}
+              />
+            </div>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </div>

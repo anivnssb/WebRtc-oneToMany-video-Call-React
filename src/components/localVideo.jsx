@@ -8,7 +8,7 @@ const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
   return (
     <div
       className={`local-video-container ${
-        inCall ? (pinnedClient ? 'client-pinned' : '') : 'not-conneted'
+        inCall ? (pinnedClient ? 'client-pinned' : '') : 'not-connected'
       }`}
     >
       <div className="video-wraper">
@@ -32,7 +32,7 @@ const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
           </div>
         </div>
       </div>
-      <p>You</p>
+      {inCall ? <p>You</p> : ''}
       <div></div>
     </div>
   );
