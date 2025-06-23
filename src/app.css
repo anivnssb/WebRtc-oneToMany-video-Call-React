@@ -364,11 +364,6 @@ button.back-arrow-button svg:hover {
 
 @media screen and (min-width: 1200px) {
   .pinned-section video {
-    width: 750px !important;
-  }
-}
-@media screen and (min-width: 1300px) {
-  .pinned-section video {
-    width: 800px !important;
+    width: 700px !important;
   }
 }
