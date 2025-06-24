@@ -231,7 +231,7 @@ button.back-arrow-button svg:hover {
 
 .local-video-container .video-wraper video {
   width: 90%;
-  border: 5px solid rgb(6, 10, 8);
+  border: 5px solid rgb(17, 18, 17);
   border-radius: 25px;
 }
 .local-video-container.not-connected .video-wraper video {
@@ -245,6 +245,7 @@ button.back-arrow-button svg:hover {
 }
 .remote-video-container .video-wraper video {
   width: 90%;
+  border: 5px solid rgb(17, 18, 17);
   border-radius: 25px;
 }
 
@@ -275,6 +276,9 @@ button.back-arrow-button svg:hover {
 }
 
 .overlay:hover .overlay-button-container {
+  visibility: visible;
+}
+.overlay-button-container-visible {
   visibility: visible;
 }
 .ctrl-button-group1 {
