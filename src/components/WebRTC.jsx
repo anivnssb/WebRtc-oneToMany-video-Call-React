@@ -78,7 +78,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
 
     const localStream = await navigator.mediaDevices.getUserMedia({
       video: true,
-      audio: false,
+      audio: true,
     });
     if (localStream) {
       localStream.getTracks().forEach((track) => {
@@ -106,7 +106,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     // This function is used to create a new peer connection for the firt time
     const localStream = await navigator.mediaDevices.getUserMedia({
       video: true,
-      audio: false,
+      audio: true,
     });
 
     //  Update video streams in the DOM
@@ -307,7 +307,6 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           dispatch,
           answer,
           createpeerConnectionForRemote,
-          hangup,
         }}
       />
 
@@ -340,20 +339,24 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
               key="localvdo-123"
             />
             {remoteStreams.length
-              ? remoteStreams.map((stream, index) => (
-                  <RemoteVideo
-                    {...{
-                      stream,
-                      index,
-                      hangupRemote,
-                      hostORClient,
-                      dispatch,
-                      pinnedClient,
-                      inCall,
-                    }}
-                    key={index + 'remote-video-component'}
-                  />
-                ))
+              ? remoteStreams.map((stream, index) => {
+                  if (pinnedClient !== stream.id) {
+                    return (
+                      <RemoteVideo
+                        {...{
+                          stream,
+                          index,
+                          hangupRemote,
+                          hostORClient,
+                          dispatch,
+                          pinnedClient,
+                          inCall,
+                        }}
+                        key={index + 'remote-video-component'}
+                      />
+                    );
+                  }
+                })
               : ''}
           </div>
           {pinnedClient ? (

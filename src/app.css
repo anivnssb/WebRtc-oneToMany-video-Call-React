@@ -277,6 +277,16 @@ button.back-arrow-button svg:hover {
 .overlay:hover .overlay-button-container {
   visibility: visible;
 }
+.ctrl-button-group1 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ctrl-button-group2 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 .hangup-button {
   background-color: red;
   border-radius: 100%;
@@ -291,6 +301,13 @@ button.back-arrow-button svg:hover {
   cursor: pointer;
   display: flex;
   display: none;
+}
+.vdo-control-button {
+  background-color: rgb(154, 154, 154);
+  border-radius: 100%;
+  border: none;
+  cursor: pointer;
+  display: flex;
 }
 .pinned-section {
   display: none;

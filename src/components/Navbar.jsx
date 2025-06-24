@@ -8,7 +8,6 @@ const Navbar = ({
   dispatch,
   answer,
   createpeerConnectionForRemote,
-  hangup,
   peerConnection,
   offer,
 }) => {
@@ -17,7 +16,6 @@ const Navbar = ({
       <button
         className="button back-arrow-button"
         onClick={() => {
-          hangup();
           setHostORClient('');
         }}
       >
