@@ -142,7 +142,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     dispatch({ type: 'SET_PEER_CONNECTION', payload: [pc] });
   };
 
-  const generateIceCandidate = async (peerType) => {
+  const generateIceCandidate = (peerType) => {
     if (!peerConnection[peerConnection.length - 1]) {
       throw new Error('Peer connection is not available');
     }
@@ -229,7 +229,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       throw new Error('Peer connection is not available');
     }
 
-    await generateIceCandidate('caller');
+    generateIceCandidate('caller');
 
     const offerDescription = await peerConnection[
       peerConnection.length - 1
@@ -268,7 +268,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     //********for client only********
 
     try {
-      await generateIceCandidate('receiver');
+      generateIceCandidate('receiver');
       const offerr = await JSON.parse(offer[offer.length - 1]);
       const offerDescription = new RTCSessionDescription(offerr);
       await peerConnection[peerConnection.length - 1].setRemoteDescription(
@@ -291,9 +291,6 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       console.error('Error answering call:', error);
     }
   };
-  if (!hostORClient) {
-    return <></>;
-  }
   return (
     <div className="App">
       <Navbar
