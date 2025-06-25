@@ -64,10 +64,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             const index = peerConnection.current.findIndex(
               (pc) => pc.pcid == pcid
             );
-            console.log(index);
             if (index === -1) return;
-
-            console.log('Disconnecting peer at index:', index);
             peeerConnection.close();
             const updatedOffers = [...offerRef.current];
             updatedOffers.splice(index, 1);
@@ -87,9 +84,8 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
 
             if (updatedPeerConnections.length === 0) {
               dispatch({ type: 'SET_IN_CALL', payload: false });
+              createPeerConnection();
             }
-
-            createPeerConnection();
             console.log('Disconnected from peer');
             break;
           }
