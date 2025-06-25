@@ -67,7 +67,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     });
   }
 
-  const createpeerConnectionForRemote = async () => {
+  const createNewPeerConnectionForRemote = async () => {
     const pc = new RTCPeerConnection();
     registerPeerConnectionListeners(pc);
 
@@ -92,7 +92,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       });
     };
     dispatch({ type: 'SET_PEER_CONNECTION', payload: [...peerConnection, pc] });
-    console.log('createpeerConnectionForRemote created');
+    console.log('createNewPeerConnectionForRemote created');
   };
   const createPeerConnection = async () => {
     const localStream = await navigator.mediaDevices.getUserMedia({
@@ -268,7 +268,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           inCall,
           dispatch,
           answer,
-          createpeerConnectionForRemote,
+          createNewPeerConnectionForRemote,
           offerAnswerVisibile,
         }}
       />

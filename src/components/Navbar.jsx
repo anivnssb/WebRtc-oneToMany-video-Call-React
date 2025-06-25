@@ -7,7 +7,7 @@ const Navbar = ({
   inCall,
   dispatch,
   answer,
-  createpeerConnectionForRemote,
+  createNewPeerConnectionForRemote,
   peerConnection,
   offer,
   offerAnswerVisibile,
@@ -52,7 +52,7 @@ const Navbar = ({
                   'clear this text and paste the answer from the new clent',
                 ],
               });
-              createpeerConnectionForRemote();
+              createNewPeerConnectionForRemote();
             }}
           >
             Add new client{' '}
