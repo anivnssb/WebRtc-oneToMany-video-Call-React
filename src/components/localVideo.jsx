@@ -30,17 +30,6 @@ const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
     }
     setVideoEnabled(bool);
   };
-  useEffect(() => {
-    const stream = localVideoRef.current?.srcObject;
-    const audioTrack = stream?.getAudioTracks()[0];
-    if (audioTrack) {
-      audioTrack.enabled = false;
-    }
-    const videoTrack = stream?.getVideoTracks()[0];
-    if (videoTrack) {
-      videoTrack.enabled = false;
-    }
-  }, [localVideoRef.current?.srcObject]);
   return (
     <div
       className={`local-video-container ${
