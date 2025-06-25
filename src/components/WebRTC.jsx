@@ -19,10 +19,23 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
 
   const localVideoRef = useRef(null);
   const peerConnection = useRef([]);
+  const remoteStreamsRef = useRef();
+  const answerRef = useRef([]);
+  const offerRef = useRef([]);
 
   useEffect(() => {
     createPeerConnection();
   }, []);
+
+  useEffect(() => {
+    remoteStreamsRef.current = remoteStreams.concat([]);
+  }, [remoteStreams]);
+  useEffect(() => {
+    answerRef.current = answer.concat([]);
+  }, [answerRef]);
+  useEffect(() => {
+    offerRef.current = offer.concat([]);
+  }, [offerRef]);
 
   function registerPeerConnectionListeners(peeerConnection, pcid) {
     peeerConnection.addEventListener('icegatheringstatechange', () => {
@@ -56,15 +69,15 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
 
             console.log('Disconnecting peer at index:', index);
             peeerConnection.close();
-            const updatedOffers = [...offer];
+            const updatedOffers = [...offerRef.current];
             updatedOffers.splice(index, 1);
             dispatch({ type: 'SET_OFFER', payload: updatedOffers });
 
-            const updatedAnswers = [...answer];
+            const updatedAnswers = [...answerRef.current];
             updatedAnswers.splice(index, 1);
             dispatch({ type: 'SET_ANSWER', payload: updatedAnswers });
 
-            const updatedStreams = [...remoteStreams];
+            const updatedStreams = [...remoteStreamsRef.current];
             updatedStreams.splice(index, 1);
             dispatch({ type: 'SET_REMOTE_STREAMS', payload: updatedStreams });
 
