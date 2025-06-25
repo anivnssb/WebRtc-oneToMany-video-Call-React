@@ -10,6 +10,7 @@ const Navbar = ({
   createpeerConnectionForRemote,
   peerConnection,
   offer,
+  offerAnswerVisibile,
 }) => {
   return (
     <div className="navbar">
@@ -61,9 +62,14 @@ const Navbar = ({
         )}
 
         <div
-          className="offer-answer-expand-icon"
+          className={`offer-answer-expand-icon ${
+            offerAnswerVisibile ? 'roate-icon' : ''
+          }`}
           onClick={() =>
-            dispatch({ type: 'OFFER_ANSWER_VISIBLE', payload: true })
+            dispatch({
+              type: 'OFFER_ANSWER_VISIBLE',
+              payload: !offerAnswerVisibile,
+            })
           }
         >
           <FaAnglesDown />

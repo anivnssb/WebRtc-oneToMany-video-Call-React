@@ -307,6 +307,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           dispatch,
           answer,
           createpeerConnectionForRemote,
+          offerAnswerVisibile,
         }}
       />
 

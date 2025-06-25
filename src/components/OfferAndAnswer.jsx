@@ -20,17 +20,9 @@ const OfferAndAnswer = ({
         offerAnswerVisibile ? 'offer-answer-expanded' : ''
       }`}
     >
-      <div
-        className="offer-answer-close-icon"
-        onClick={() =>
-          dispatch({ type: 'OFFER_ANSWER_VISIBLE', payload: false })
-        }
-      >
-        <FaXmark />
-      </div>
       {/* OFFER */}
       <div className="offer-answer">
-        <h3>Offer</h3>
+        {offerAnswerVisibile ? <h3>Offer</h3> : ''}
         <textarea
           value={
             offer[offer.length - 1]
@@ -46,7 +38,7 @@ const OfferAndAnswer = ({
           rows="10"
           cols="50"
         />
-        {hostORClient === 'host' ? (
+        {hostORClient === 'host' && offerAnswerVisibile ? (
           <div className="connect-buttons-container">
             <button
               className="button-two disable-text-selection"
@@ -61,7 +53,7 @@ const OfferAndAnswer = ({
               Copy Offer{' '}
             </button>
           </div>
-        ) : (
+        ) : offerAnswerVisibile ? (
           <div className="connect-buttons-container">
             <button
               className="button-two disable-text-selection"
@@ -70,10 +62,12 @@ const OfferAndAnswer = ({
               Answer Call{' '}
             </button>
           </div>
+        ) : (
+          ''
         )}
       </div>
       <div className="offer-answer">
-        <h3>Answer</h3>
+        {offerAnswerVisibile ? <h3>Answer</h3> : ''}
         <textarea
           value={
             answer[answer.length - 1]
@@ -98,7 +92,7 @@ const OfferAndAnswer = ({
         />
 
         <div className="connect-buttons-container">
-          {hostORClient === 'host' ? (
+          {hostORClient === 'host' && offerAnswerVisibile ? (
             <button
               className="button-two  disable-text-selection"
               onClick={() => onAnswer(JSON.parse(answer[answer.length - 1]))}
@@ -108,7 +102,7 @@ const OfferAndAnswer = ({
           ) : (
             ''
           )}
-          {hostORClient === 'client' ? (
+          {hostORClient === 'client' && offerAnswerVisibile ? (
             <button
               className="button-two disable-text-selection"
               onClick={() =>

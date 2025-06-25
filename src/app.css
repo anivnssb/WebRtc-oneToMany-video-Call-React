@@ -141,44 +141,45 @@ button.back-arrow-button svg:hover {
   width: fit-content;
   padding: 10px;
   padding-bottom: 20px;
-  border-radius: 15px;
+  border-radius: 0 0 15px 15px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: absolute;
+  top: -10px;
   right: 0;
   z-index: 999;
+  transition: transform 0.2s ease-out;
   transform: scaleY(0);
+  transform-origin: top;
 }
-.call-section {
-  position: relative;
-}
-.offer-answer-expand-icon {
-  padding-right: 10px;
-  cursor: pointer;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-.offer-answer-expand-icon:hover {
-  color: rgb(59, 131, 255);
-}
-.offer-answer-close-icon {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 10px;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-.offer-answer-close-icon:hover {
-  color: rgb(59, 131, 255);
-}
-
 .offer-and-answer-container.offer-answer-expanded {
   overflow: hidden;
   transition: transform 0.2s ease-out;
   height: auto;
   transform: scaleY(1);
   transform-origin: top;
+}
+.call-section {
+  position: relative;
+}
+.offer-answer-expand-icon {
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.offer-answer-expand-icon:hover {
+  color: rgb(59, 131, 255);
+}
+.offer-answer-expand-icon.roate-icon {
+  transition: transform 0.3s ease;
+  transform: rotate(180deg);
+  transform-origin: center;
 }
 
 .offer-answer {
