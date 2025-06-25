@@ -9,7 +9,6 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
   const [state, dispatch] = useReducer(reducerFunction, initialState);
   const {
     inCall,
-    peerConnection,
     waitingForPeer,
     remoteStreams,
     offer,
@@ -19,22 +18,25 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
   } = state;
 
   const localVideoRef = useRef(null);
+  const peerConnection = useRef([]);
 
   useEffect(() => {
     createPeerConnection();
   }, []);
 
-  function registerPeerConnectionListeners(peerConnection) {
-    peerConnection.addEventListener('icegatheringstatechange', () => {
+  function registerPeerConnectionListeners(peeerConnection, pcid) {
+    peeerConnection.addEventListener('icegatheringstatechange', () => {
       console.log(
-        `ICE gathering state changed: ${peerConnection.iceGatheringState}`
+        `ICE gathering state changed: ${peeerConnection.iceGatheringState}`
       );
     });
 
-    peerConnection.addEventListener('connectionstatechange', () => {
-      console.log(`Connection state change: ${peerConnection.connectionState}`);
+    peeerConnection.addEventListener('connectionstatechange', () => {
+      console.log(
+        `Connection state change: ${peeerConnection.connectionState}`
+      );
 
-      switch (peerConnection.connectionState) {
+      switch (peeerConnection.connectionState) {
         case 'connecting':
           dispatch({ type: 'SET_WAITING_FOR_PEER', payload: true });
           break;
@@ -45,32 +47,59 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           break;
 
         case 'disconnected':
-          peerConnection.close();
-          dispatch({ type: 'SET_IN_CALL', payload: false });
-          dispatch({ type: 'SET_OFFER', payload: [] });
-          dispatch({ type: 'SET_ANSWER', payload: [] });
-          dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
-          createPeerConnection();
-          console.log('Disconnected from peer');
-          break;
+          if (pcid) {
+            const index = peerConnection.current.findIndex(
+              (pc) => pc.pcid == pcid
+            );
+            console.log(index);
+            if (index === -1) return;
+
+            console.log('Disconnecting peer at index:', index);
+            peeerConnection.close();
+            const updatedOffers = [...offer];
+            updatedOffers.splice(index, 1);
+            dispatch({ type: 'SET_OFFER', payload: updatedOffers });
+
+            const updatedAnswers = [...answer];
+            updatedAnswers.splice(index, 1);
+            dispatch({ type: 'SET_ANSWER', payload: updatedAnswers });
+
+            const updatedStreams = [...remoteStreams];
+            updatedStreams.splice(index, 1);
+            dispatch({ type: 'SET_REMOTE_STREAMS', payload: updatedStreams });
+
+            const updatedPeerConnections = [...peerConnection.current];
+            updatedPeerConnections.splice(index, 1);
+            peerConnection.current = updatedPeerConnections;
+
+            if (updatedPeerConnections.length === 0) {
+              dispatch({ type: 'SET_IN_CALL', payload: false });
+            }
+
+            createPeerConnection();
+            console.log('Disconnected from peer');
+            break;
+          }
       }
     });
 
-    peerConnection.addEventListener('signalingstatechange', () => {
-      console.log(`Signaling state change: ${peerConnection.signalingState}`);
+    peeerConnection.addEventListener('signalingstatechange', () => {
+      console.log(`Signaling state change: ${peeerConnection.signalingState}`);
     });
 
-    peerConnection.addEventListener('iceconnectionstatechange ', () => {
+    peeerConnection.addEventListener('iceconnectionstatechange ', () => {
       console.log(
-        `ICE connection state change: ${peerConnection.iceConnectionState}`
+        `ICE connection state change: ${peeerConnection.iceConnectionState}`
       );
     });
   }
 
   const createNewPeerConnectionForRemote = async () => {
     const pc = new RTCPeerConnection();
-    registerPeerConnectionListeners(pc);
-
+    registerPeerConnectionListeners(
+      pc,
+      peerConnection.current[peerConnection.current.length - 1].pcid + 1
+    );
     const localStream = localVideoRef.current?.srcObject;
     if (localStream) {
       localStream.getTracks().forEach((track) => {
@@ -91,8 +120,11 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
         payload: [...remoteStreams, remoteStream],
       });
     };
-    dispatch({ type: 'SET_PEER_CONNECTION', payload: [...peerConnection, pc] });
-    console.log('createNewPeerConnectionForRemote created');
+    pc.pcid =
+      peerConnection.current[peerConnection.current.length - 1].pcid + 1;
+    peerConnection.current = [...peerConnection.current, pc];
+
+    console.log('New Peer Connection ForRemote created');
   };
   const createPeerConnection = async () => {
     const localStream = await navigator.mediaDevices.getUserMedia({
@@ -103,7 +135,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     localStream.getVideoTracks()[0].enabled = false;
     localVideoRef.current.srcObject = localStream;
     const pc = new RTCPeerConnection();
-    registerPeerConnectionListeners(pc);
+    registerPeerConnectionListeners(pc, 1);
 
     if (localStream) {
       localStream.getTracks().forEach((track) => {
@@ -124,21 +156,25 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
         payload: [...remoteStreams, remoteStream],
       });
     };
-    dispatch({ type: 'SET_PEER_CONNECTION', payload: [pc] });
+    pc.pcid = 1;
+    peerConnection.current = [pc];
   };
 
   const generateIceCandidate = (peerType) => {
-    if (!peerConnection[peerConnection.length - 1]) {
+    if (!peerConnection.current[peerConnection.current.length - 1]) {
       throw new Error('Peer connection is not available');
     }
-    peerConnection[peerConnection.length - 1].onicecandidate = (event) => {
+    peerConnection.current[peerConnection.current.length - 1].onicecandidate = (
+      event
+    ) => {
       if (event.candidate) {
         if (peerType === 'caller') {
           dispatch({
             type: 'SET_OFFER',
             payload: [
               ...offer,
-              peerConnection[peerConnection.length - 1]?.localDescription,
+              peerConnection.current[peerConnection.current.length - 1]
+                ?.localDescription,
             ],
           });
         } else if (peerType === 'receiver') {
@@ -146,7 +182,8 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             type: 'SET_ANSWER',
             payload: [
               ...answer,
-              peerConnection[peerConnection.length - 1]?.localDescription,
+              peerConnection.current[peerConnection.current.length - 1]
+                ?.localDescription,
             ],
           });
         } else {
@@ -158,35 +195,34 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     };
   };
 
-  const hangup = async () => {
-    if (!peerConnection[peerConnection.length - 1]) {
-      dispatch({ type: 'SET_IN_CALL', payload: false });
-      dispatch({ type: 'SET_OFFER', payload: [] });
-      dispatch({ type: 'SET_ANSWER', payload: [] });
-      dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
-
-      createPeerConnection();
-      throw new Error('Peer connection is not available');
-    }
-    for (const pc of peerConnection) {
+  const hangupHost = async () => {
+    for (const pc of peerConnection.current) {
       await pc.close();
     }
     dispatch({ type: 'SET_IN_CALL', payload: false });
     dispatch({ type: 'SET_OFFER', payload: [] });
     dispatch({ type: 'SET_ANSWER', payload: [] });
     dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
-
+    peerConnection.current = [];
+    createPeerConnection();
+  };
+  const hangupClient = async () => {
+    await peerConnection.current[0].close();
+    dispatch({ type: 'SET_IN_CALL', payload: false });
+    dispatch({ type: 'SET_OFFER', payload: [] });
+    dispatch({ type: 'SET_ANSWER', payload: [] });
+    dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
     createPeerConnection();
   };
   const hangupRemote = async (index) => {
-    if (!peerConnection[index]) {
+    if (!peerConnection.current[index]) {
       throw new Error('Peer connection is not available');
     }
-    if (answer.length === 1) {
-      hangup();
+    if (peerConnection.current.length === 1) {
+      hangupHost();
       return;
     }
-    await peerConnection[index].close();
+    await peerConnection.current[index].close();
     const offerCopy = [...offer];
     offerCopy.splice(index, 1);
     dispatch({ type: 'SET_OFFER', payload: offerCopy });
@@ -199,41 +235,44 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     updatedRemoteStreams.splice(index, 1);
     dispatch({ type: 'SET_REMOTE_STREAMS', payload: updatedRemoteStreams });
 
-    const peerConnectionCopy = [...peerConnection];
+    const peerConnectionCopy = [...peerConnection.current];
     peerConnectionCopy.splice(index, 1);
-    dispatch({ type: 'SET_PEER_CONNECTION', payload: peerConnectionCopy });
-    console.log('Remote connection closed');
+    peerConnection.current = peerConnectionCopy;
+    console.log('peer connection for Remote closed');
   };
 
   const startCall = async () => {
-    if (!peerConnection[peerConnection.length - 1]) {
+    if (!peerConnection.current[peerConnection.current.length - 1]) {
       throw new Error('Peer connection is not available');
     }
 
     generateIceCandidate('caller');
 
-    const offerDescription = await peerConnection[
-      peerConnection.length - 1
+    const offerDescription = await peerConnection.current[
+      peerConnection.current.length - 1
     ].createOffer();
-    await peerConnection[peerConnection.length - 1].setLocalDescription(
-      offerDescription
-    );
+    await peerConnection.current[
+      peerConnection.current.length - 1
+    ].setLocalDescription(offerDescription);
   };
 
   const onAnswer = async (answer) => {
-    if (!peerConnection[peerConnection.length - 1]) {
+    if (!peerConnection.current[peerConnection.current.length - 1]) {
       throw new Error('Peer connection is not available');
     }
 
-    if (peerConnection[peerConnection.length - 1].currentRemoteDescription) {
+    if (
+      peerConnection.current[peerConnection.current.length - 1]
+        .currentRemoteDescription
+    ) {
       console.log('Remote description already set');
       return;
     }
 
     const answerDescription = new RTCSessionDescription(answer);
-    await peerConnection[peerConnection.length - 1].setRemoteDescription(
-      answerDescription
-    );
+    await peerConnection.current[
+      peerConnection.current.length - 1
+    ].setRemoteDescription(answerDescription);
     dispatch({ type: 'SET_IN_CALL', payload: true });
   };
 
@@ -242,16 +281,16 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       generateIceCandidate('receiver');
       const offerr = await JSON.parse(offer[offer.length - 1]);
       const offerDescription = new RTCSessionDescription(offerr);
-      await peerConnection[peerConnection.length - 1].setRemoteDescription(
-        offerDescription
-      );
+      await peerConnection.current[
+        peerConnection.current.length - 1
+      ].setRemoteDescription(offerDescription);
 
-      const answerDescription = await peerConnection[
-        peerConnection.length - 1
+      const answerDescription = await peerConnection.current[
+        peerConnection.current.length - 1
       ].createAnswer();
-      await peerConnection[peerConnection.length - 1].setLocalDescription(
-        answerDescription
-      );
+      await peerConnection.current[
+        peerConnection.current.length - 1
+      ].setLocalDescription(answerDescription);
     } catch (error) {
       console.error('Error answering call:', error);
     }
@@ -262,7 +301,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
         {...{
           setHostORClient,
           waitingForPeer,
-          peerConnection,
+          peerConnection: peerConnection.current,
           offer,
           hostORClient,
           inCall,
@@ -270,6 +309,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           answer,
           createNewPeerConnectionForRemote,
           offerAnswerVisibile,
+          hangup: hostORClient === 'host' ? hangupHost : hangupClient,
         }}
       />
 
@@ -296,7 +336,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
               {...{
                 localVideoRef,
                 inCall,
-                hangup,
+                hangup: hostORClient === 'host' ? hangupHost : hangupClient,
                 pinnedClient,
               }}
               key="localvdo-123"
@@ -314,6 +354,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
                           dispatch,
                           pinnedClient,
                           inCall,
+                          remoteStreams,
                         }}
                         key={index + 'remote-video-component'}
                       />
@@ -330,6 +371,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
                   hangupRemote,
                   dispatch,
                   hostORClient,
+                  remoteStreams,
                   stream:
                     remoteStreams[
                       remoteStreams.findIndex(({ id }) => id === pinnedClient)

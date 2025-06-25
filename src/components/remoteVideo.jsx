@@ -18,6 +18,7 @@ const RemoteVideo = ({
   dispatch,
   pinnedClient,
   inCall,
+  remoteStreams,
 }) => {
   const videoRef = useRef(null);
   const overlayBtnContainerRef = useRef(null);
@@ -72,15 +73,22 @@ const RemoteVideo = ({
             ref={overlayBtnContainerRef}
           >
             <div className="ctrl-button-group1">
-              <button
-                onClick={() => {
-                  hangupRemote(index);
-                }}
-                className="hangup-button"
-                style={{ padding: width * 0.05 }}
-              >
-                <ImPhoneHangUp color="white" size={width * 0.1} />
-              </button>
+              {hostORClient === 'host' ? (
+                <button
+                  onClick={() => {
+                    const index = remoteStreams.findIndex(
+                      ({ id }) => id === stream?.id
+                    );
+                    hangupRemote(index);
+                  }}
+                  className="hangup-button"
+                  style={{ padding: width * 0.05 }}
+                >
+                  <ImPhoneHangUp color="white" size={width * 0.1} />
+                </button>
+              ) : (
+                ''
+              )}
               <button
                 onClick={() =>
                   dispatch({

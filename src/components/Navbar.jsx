@@ -11,12 +11,14 @@ const Navbar = ({
   peerConnection,
   offer,
   offerAnswerVisibile,
+  hangup,
 }) => {
   return (
     <div className="navbar">
       <button
         className="button back-arrow-button"
         onClick={() => {
+          hangup();
           setHostORClient('');
         }}
       >
