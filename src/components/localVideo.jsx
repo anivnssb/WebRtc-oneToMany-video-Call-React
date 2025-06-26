@@ -9,8 +9,7 @@ import {
 } from 'react-icons/fa';
 
 const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
-  const overlayBtnContainerRef = useRef(null);
-  const [width] = useObserveWidth(overlayBtnContainerRef);
+  const [overlayBtnContainerRef, width] = useObserveWidth();
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [videoEnabled, setVideoEnabled] = useState(false);
 

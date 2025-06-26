@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const useObserveWidth = (elementRef) => {
+const useObserveWidth = () => {
+  const elementRef = useRef(null);
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
@@ -19,7 +20,7 @@ const useObserveWidth = (elementRef) => {
     return () => resizeObserver.disconnect();
   }, []);
 
-  return [width];
+  return [elementRef, width];
 };
 
 export default useObserveWidth;

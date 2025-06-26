@@ -13,8 +13,7 @@ const PinnedVideo = ({
   remoteStreams,
 }) => {
   const videoRef = useRef(null);
-  const overlayBtnContainerRef = useRef(null);
-  const [width] = useObserveWidth(overlayBtnContainerRef);
+  const [overlayBtnContainerRef, width] = useObserveWidth();
   const [mute, setMute] = useState(true);
   const goFullscreen = () => {
     const video = videoRef.current;
