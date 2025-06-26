@@ -263,29 +263,32 @@ button.back-arrow-button svg:hover {
   margin-bottom: 10px;
   width: fit-content;
 }
-
-.video-wraper {
-  position: relative;
-  border-radius: 25px;
-  overflow: hidden;
-}
-
-.local-video-container .video-wraper video {
-  width: 90%;
-  border: 5px solid rgb(17, 18, 17);
-  border-radius: 25px;
-}
-.local-video-container.not-connected .video-wraper video {
-  width: 90% !important;
-}
-
 .remote-video-container {
   text-align: center;
   margin-bottom: 10px;
   width: fit-content;
 }
+
+.video-wraper {
+  position: relative;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.local-video-container .video-wraper video {
+  width: 100%;
+  border: 5px solid rgb(17, 18, 17);
+  border-radius: 25px;
+}
 .remote-video-container .video-wraper video {
-  width: 90%;
+  width: 100%;
+  border: 5px solid rgb(17, 18, 17);
+  border-radius: 25px;
+}
+.remote-video-container .video-wraper video {
+  width: 100%;
   border: 5px solid rgb(17, 18, 17);
   border-radius: 25px;
 }
@@ -293,9 +296,8 @@ button.back-arrow-button svg:hover {
 .overlay {
   background: rgb(0, 0, 0, 0);
   position: absolute;
-  width: 90%;
-  height: 100%;
-  top: 0px;
+  width: 80%;
+  height: 80%;
   border-radius: 25px;
   left: 0;
   right: 0;
@@ -375,15 +377,17 @@ button.back-arrow-button svg:hover {
     width: 40%;
   }
 }
-@media screen and (min-width: 764px) {
+@media screen and (min-width: 550px) {
   .call-section {
     flex-direction: row;
   }
   .meeing-end-message {
     width: 30%;
   }
-  .local-video-container.not-connected .video-wraper video {
-    width: 60% !important;
+  .local-remote-video-wraper.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -398,19 +402,12 @@ button.back-arrow-button svg:hover {
   .pin-button {
     display: flex;
   }
-  .pinned-section {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
+
   .pinned-state {
+    /*divide local-remote videos and pinned video into two sections*/
     display: flex;
     flex-direction: row;
     width: 100%;
-  }
-  .local-remote-video-wraper {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
   .local-remote-video-wraper.pinned {
     display: block;
@@ -418,10 +415,16 @@ button.back-arrow-button svg:hover {
     margin-left: 15px;
     max-height: 80vh;
     overflow-y: scroll;
-    max-width: 20%;
+    flex: 0 0 30%;
   }
   .pinned-section video {
-    width: 550px !important;
+    flex: 0 0 70%;
+  }
+  .pinned-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
   }
 }
 
@@ -429,16 +432,15 @@ button.back-arrow-button svg:hover {
   .meeing-end-message {
     width: 25%;
   }
-  .pinned-section video {
-    width: 650px !important;
-  }
 }
 
 @media screen and (min-width: 1200px) {
   .meeing-end-message {
     width: 20%;
   }
-  .pinned-section video {
-    width: 700px !important;
+}
+@media screen and (min-width: 1400px) {
+  .meeing-end-message {
+    width: 15%;
   }
 }

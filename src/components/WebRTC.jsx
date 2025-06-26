@@ -339,7 +339,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
         />
         <div className="pinned-state">
           <div
-            className={`local-remote-video-wraper ${
+            className={`local-remote-video-wraper ${inCall ? 'grid' : ''} ${
               pinnedClient ? 'pinned' : ''
             }`}
           >

@@ -33,7 +33,7 @@ const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
   return (
     <div
       className={`local-video-container ${
-        inCall ? (pinnedClient ? 'client-pinned' : '') : 'not-connected'
+        inCall ? (pinnedClient ? 'client-pinned' : '') : ''
       }`}
     >
       <div className="video-wraper">
