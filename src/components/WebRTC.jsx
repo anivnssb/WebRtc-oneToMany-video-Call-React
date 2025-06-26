@@ -94,6 +94,8 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             if (updatedPeerConnections.length === 0) {
               dispatch({ type: 'SET_IN_CALL', payload: false });
               dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
+              localVideoRef.current.srcObject.getAudioTracks()[0].enabled = false;
+              localVideoRef.current.srcObject.getVideoTracks()[0].enabled = false;
             }
             console.log('Disconnected from peer');
             break;
@@ -223,6 +225,8 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
     dispatch({ type: 'SET_PINNED_CLIENT', payload: null });
     dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
+    localVideoRef.current.srcObject.getAudioTracks()[0].enabled = false;
+    localVideoRef.current.srcObject.getVideoTracks()[0].enabled = false;
     peerConnection.current = [];
   };
   const hangupClient = async () => {
@@ -233,6 +237,8 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
     dispatch({ type: 'SET_PINNED_CLIENT', payload: null });
     dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
+    localVideoRef.current.srcObject.getAudioTracks()[0].enabled = false;
+    localVideoRef.current.srcObject.getVideoTracks()[0].enabled = false;
     peerConnection.current = [];
   };
   const hangupRemote = async (index) => {
