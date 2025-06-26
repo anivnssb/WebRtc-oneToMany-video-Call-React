@@ -148,7 +148,7 @@ button.back-arrow-button svg:hover {
 }
 .meeing-end-message {
   width: 70%;
-  height: 10%;
+  padding: 15px 10px;
   display: flex;
   justify-content: center;
   align-items: center;
