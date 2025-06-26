@@ -24,6 +24,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
   const remoteStreamsRef = useRef();
   const answerRef = useRef([]);
   const offerRef = useRef([]);
+  const pinnedClientRef = useRef(null);
 
   useEffect(() => {
     remoteStreamsRef.current = remoteStreams.concat([]);
@@ -34,6 +35,9 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
   useEffect(() => {
     offerRef.current = offer.concat([]);
   }, [offer]);
+  useEffect(() => {
+    pinnedClientRef.current = pinnedClient;
+  }, [pinnedClient]);
 
   useEffect(() => {
     createPeerConnection();
@@ -77,8 +81,11 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             dispatch({ type: 'SET_ANSWER', payload: updatedAnswers });
 
             const updatedStreams = [...remoteStreamsRef.current];
-            updatedStreams.splice(index, 1);
+            const removedStream = updatedStreams.splice(index, 1);
             dispatch({ type: 'SET_REMOTE_STREAMS', payload: updatedStreams });
+            if (removedStream[0].id === pinnedClientRef.current) {
+              dispatch({ type: 'SET_PINNED_CLIENT', payload: null });
+            }
 
             const updatedPeerConnections = [...peerConnection.current];
             updatedPeerConnections.splice(index, 1);
@@ -214,8 +221,9 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     dispatch({ type: 'SET_OFFER', payload: [] });
     dispatch({ type: 'SET_ANSWER', payload: [] });
     dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
-    peerConnection.current = [];
+    dispatch({ type: 'SET_PINNED_CLIENT', payload: null });
     dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
+    peerConnection.current = [];
   };
   const hangupClient = async () => {
     await peerConnection.current[0].close();
@@ -223,7 +231,9 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     dispatch({ type: 'SET_OFFER', payload: [] });
     dispatch({ type: 'SET_ANSWER', payload: [] });
     dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
+    dispatch({ type: 'SET_PINNED_CLIENT', payload: null });
     dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
+    peerConnection.current = [];
   };
   const hangupRemote = async (index) => {
     if (!peerConnection.current[index]) {
@@ -243,8 +253,11 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     dispatch({ type: 'SET_ANSWER', payload: answerCopy });
 
     const updatedRemoteStreams = [...remoteStreams];
-    updatedRemoteStreams.splice(index, 1);
+    const removedStream = updatedRemoteStreams.splice(index, 1);
     dispatch({ type: 'SET_REMOTE_STREAMS', payload: updatedRemoteStreams });
+    if (removedStream[0].id === pinnedClient) {
+      dispatch({ type: 'SET_PINNED_CLIENT', payload: null });
+    }
 
     const peerConnectionCopy = [...peerConnection.current];
     peerConnectionCopy.splice(index, 1);
