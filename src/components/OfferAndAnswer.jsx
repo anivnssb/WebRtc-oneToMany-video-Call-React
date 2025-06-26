@@ -1,6 +1,3 @@
-import { FaXmark } from 'react-icons/fa6';
-import InfoIcon from '../components/icons/IIcon';
-
 const OfferAndAnswer = ({
   offer,
   hostORClient,

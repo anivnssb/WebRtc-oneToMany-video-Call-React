@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import { initialState, reducerFunction } from '../state/stateAndReducer';
 import RemoteVideo from './remoteVideo';
 import PinnedVideo from './PinnedVideo';
+import MeetingEnded from './MeetingEnded';
 const WebRTC = ({ hostORClient, setHostORClient }) => {
   const [state, dispatch] = useReducer(reducerFunction, initialState);
   const {
@@ -15,6 +16,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     answer,
     pinnedClient,
     offerAnswerVisibile,
+    isMeetingEnded,
   } = state;
 
   const localVideoRef = useRef(null);
@@ -24,18 +26,18 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
   const offerRef = useRef([]);
 
   useEffect(() => {
-    createPeerConnection();
-  }, []);
-
-  useEffect(() => {
     remoteStreamsRef.current = remoteStreams.concat([]);
   }, [remoteStreams]);
   useEffect(() => {
     answerRef.current = answer.concat([]);
-  }, [answerRef]);
+  }, [answer]);
   useEffect(() => {
     offerRef.current = offer.concat([]);
-  }, [offerRef]);
+  }, [offer]);
+
+  useEffect(() => {
+    createPeerConnection();
+  }, []);
 
   function registerPeerConnectionListeners(peeerConnection, pcid) {
     peeerConnection.addEventListener('icegatheringstatechange', () => {
@@ -84,7 +86,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
 
             if (updatedPeerConnections.length === 0) {
               dispatch({ type: 'SET_IN_CALL', payload: false });
-              createPeerConnection();
+              dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
             }
             console.log('Disconnected from peer');
             break;
@@ -213,7 +215,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     dispatch({ type: 'SET_ANSWER', payload: [] });
     dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
     peerConnection.current = [];
-    createPeerConnection();
+    dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
   };
   const hangupClient = async () => {
     await peerConnection.current[0].close();
@@ -221,7 +223,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     dispatch({ type: 'SET_OFFER', payload: [] });
     dispatch({ type: 'SET_ANSWER', payload: [] });
     dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
-    createPeerConnection();
+    dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
   };
   const hangupRemote = async (index) => {
     if (!peerConnection.current[index]) {
@@ -396,6 +398,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           )}
         </div>
       </div>
+      {isMeetingEnded ? <MeetingEnded {...{ setHostORClient }} /> : ''}
     </div>
   );
 };

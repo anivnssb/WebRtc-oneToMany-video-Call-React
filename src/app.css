@@ -134,7 +134,48 @@ button.back-arrow-button svg:hover {
   margin: 10px;
   padding: 10px 15px;
 }
-
+.meeting-end-dialog {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  z-index: 999;
+}
+.meeing-end-message {
+  width: 70%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
+  background-color: transparent;
+  border: 1px solid rgb(20, 21, 20);
+  position: relative;
+  transition: transform 0.2s ease;
+}
+.meeing-end-message:hover {
+  transform: scale(1.2);
+}
+.meeing-end-message .close-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  padding-right: 15px;
+  transition: transform 0.2s ease;
+}
+.meeing-end-message .close-icon svg {
+  cursor: pointer;
+}
+.meeing-end-message .close-icon :hover {
+  transform: scale(0.96);
+  color: rgb(230, 222, 222);
+}
 .offer-and-answer-container {
   background: rgb(20, 21, 20);
   height: fit-content;
@@ -329,10 +370,17 @@ button.back-arrow-button svg:hover {
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
-
+@media screen and (min-width: 600px) {
+  .meeing-end-message {
+    width: 40%;
+  }
+}
 @media screen and (min-width: 764px) {
   .call-section {
     flex-direction: row;
+  }
+  .meeing-end-message {
+    width: 30%;
   }
   .local-video-container.not-connected .video-wraper video {
     width: 60% !important;
@@ -378,12 +426,18 @@ button.back-arrow-button svg:hover {
 }
 
 @media screen and (min-width: 860px) {
+  .meeing-end-message {
+    width: 25%;
+  }
   .pinned-section video {
     width: 650px !important;
   }
 }
 
 @media screen and (min-width: 1200px) {
+  .meeing-end-message {
+    width: 20%;
+  }
   .pinned-section video {
     width: 700px !important;
   }

@@ -1,6 +1,6 @@
 export const initialState = {
   inCall: false,
-  peerConnection: [],
+  isMeetingEnded: false,
   waitingForPeer: false,
   remoteStreams: [],
   offer: [],
@@ -15,8 +15,8 @@ export const reducerFunction = (state, action) => {
       return { ...state, isLoading: action.payload };
     case 'SET_IN_CALL':
       return { ...state, inCall: action.payload };
-    case 'SET_PEER_CONNECTION':
-      return { ...state, peerConnection: action.payload };
+    case 'SET_IS_MEETING_ENDED':
+      return { ...state, isMeetingEnded: action.payload };
     case 'SET_WAITING_FOR_PEER':
       return { ...state, waitingForPeer: action.payload };
     case 'SET_REMOTE_STREAMS':
