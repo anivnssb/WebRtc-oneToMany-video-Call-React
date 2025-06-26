@@ -51,15 +51,7 @@ const RemoteVideo = ({
     }
   }, [stream]);
   return (
-    <div
-      className={`remote-video-container ${
-        pinnedClient === stream?.id
-          ? 'pinned-client'
-          : pinnedClient
-          ? 'client-pinned'
-          : ''
-      }`}
-    >
+    <div className="remote-video-container">
       <div className="video-wraper">
         <video
           key={index + 'remote-video-element'}

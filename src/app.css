@@ -384,10 +384,21 @@ button.back-arrow-button svg:hover {
   .meeing-end-message {
     width: 30%;
   }
-  .local-remote-video-wraper.grid {
+  .local-remote-video-wraper.connected {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1rem;
+  }
+  .local-remote-video-wraper.notConnected {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  .local-remote-video-wraper.notConnected .local-video-container {
+    flex: 0 0 50%;
+  }
+  .local-remote-video-wraper.notConnected .remote-video-container {
+    flex: 0 0 50%;
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -404,12 +415,12 @@ button.back-arrow-button svg:hover {
   }
 
   .pinned-state {
-    /*divide local-remote videos and pinned video into two sections*/
+    /*divide local-remote videos and pinned video into two sections 30%width and 50%width*/
     display: flex;
     flex-direction: row;
     width: 100%;
   }
-  .local-remote-video-wraper.pinned {
+  .pinned-state .local-remote-video-wraper.pinned {
     display: block;
     margin-right: 10px;
     margin-left: 15px;
@@ -417,7 +428,7 @@ button.back-arrow-button svg:hover {
     overflow-y: scroll;
     flex: 0 0 30%;
   }
-  .pinned-section video {
+  .pinned-state .pinned-section {
     flex: 0 0 70%;
   }
   .pinned-section {

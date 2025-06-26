@@ -30,11 +30,7 @@ const LocalVideo = ({ localVideoRef, inCall, hangup, pinnedClient }) => {
     setVideoEnabled(bool);
   };
   return (
-    <div
-      className={`local-video-container ${
-        inCall ? (pinnedClient ? 'client-pinned' : '') : ''
-      }`}
-    >
+    <div className="local-video-container">
       <div className="video-wraper">
         <video ref={localVideoRef} autoPlay muted></video>
         <div className="overlay">
