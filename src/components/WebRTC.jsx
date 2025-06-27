@@ -1,5 +1,5 @@
 import { useEffect, useRef, useReducer } from 'react';
-import LocalVideo from './LocalVideo';
+import LocalVideo from './localVideo';
 import OfferAndAnswer from './OfferAndAnswer';
 import Navbar from './Navbar';
 import { initialState, reducerFunction } from '../state/stateAndReducer';
