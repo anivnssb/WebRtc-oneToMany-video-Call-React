@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import WebRTC from './components/WebRTC';
 import Landing from './components/Landing';
-import './App.css';
+import './app.css';
 const App = () => {
   const [hostORClient, setHostORClient] = useState('');
   if (hostORClient === '') {
