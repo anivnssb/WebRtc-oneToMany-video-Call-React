@@ -2,7 +2,7 @@ import React from 'react';
 
 const Landing = ({ setHostORClient }) => {
   return (
-    <div className="Landing">
+    <div className="Landing" data-testid="landing-page">
       <div className="landing-text">
         <h1>One To Many</h1>
         <h2>Video Calling</h2>

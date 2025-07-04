@@ -1,3 +1,4 @@
+import React from 'react';
 import { ImPhoneHangUp } from 'react-icons/im';
 import { useEffect, useRef, useState } from 'react';
 import useObserveWidth from '../hooks/useObserveWidth';
