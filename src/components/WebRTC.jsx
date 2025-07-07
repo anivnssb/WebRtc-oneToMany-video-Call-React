@@ -1,4 +1,4 @@
-import { useEffect, useRef, useReducer } from 'react';
+import { useEffect, useRef, useReducer, useContext } from 'react';
 import LocalVideo from './localVideo';
 import OfferAndAnswer from './OfferAndAnswer';
 import Navbar from './Navbar';
@@ -6,7 +6,9 @@ import { initialState, reducerFunction } from '../state/stateAndReducer';
 import RemoteVideo from './remoteVideo';
 import PinnedVideo from './PinnedVideo';
 import MeetingEnded from './MeetingEnded';
+import { ThemeContext } from './ThemeContext';
 const WebRTC = ({ hostORClient, setHostORClient }) => {
+  const {theme}=useContext(ThemeContext)
   const [state, dispatch] = useReducer(reducerFunction, initialState);
   const {
     inCall,
@@ -326,7 +328,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     }
   };
   return (
-    <div className="App">
+    <div className={`${theme}`}>
       <Navbar
         {...{
           setHostORClient,

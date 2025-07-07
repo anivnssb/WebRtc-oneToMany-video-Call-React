@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ThemeContext } from './ThemeContext';
 
 const Landing = ({ setHostORClient }) => {
+  const {theme}=useContext(ThemeContext)
   return (
-    <div className="Landing" data-testid="landing-page">
+    <div className={`Landing ${theme} bg-white dark:bg-black h-screen`} data-testid="landing-page">
       <div className="landing-text">
         <h1>One To Many</h1>
         <h2>Video Calling</h2>

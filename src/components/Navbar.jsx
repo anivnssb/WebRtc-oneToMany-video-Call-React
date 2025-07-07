@@ -1,5 +1,8 @@
 import { FaAnglesDown } from 'react-icons/fa6';
 import BackArrowIcon from '../components/icons/BackArrowIcon';
+import { ThemeContext } from './ThemeContext';
+import { useContext } from 'react';
+import { FaMoon } from 'react-icons/fa';
 
 const Navbar = ({
   setHostORClient,
@@ -13,8 +16,9 @@ const Navbar = ({
   offerAnswerVisibile,
   hangup,
 }) => {
+  const {toggleTheme}=useContext(ThemeContext)
   return (
-    <div className="navbar">
+    <div className="navbar bg-white dark:bg-black ">
       <button
         className="button back-arrow-button"
         onClick={() => {
@@ -75,6 +79,9 @@ const Navbar = ({
           }
         >
           <FaAnglesDown />
+        </div>
+        <div onClick={toggleTheme}>
+          <FaMoon className='text-black dark:text-white'/>
         </div>
       </div>
     </div>
