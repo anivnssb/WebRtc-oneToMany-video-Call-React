@@ -7,8 +7,8 @@ import { createContext } from 'react';
 import { ThemeContext } from './components/ThemeContext';
 const App = () => {
   
-  const [theme,setTheme]=useState('white')
-  const toggleTheme=()=>{setTheme(prev=>prev==='dark'?'white':'dark');console.log('theme changed')}
+  const [theme,setTheme]=useState('dark')
+  const toggleTheme=()=>{setTheme(prev=>prev==='dark'?'light':'dark');console.log('theme changed')}
   const [hostORClient, setHostORClient] = useState('');
   if (hostORClient === '') {
     return (
