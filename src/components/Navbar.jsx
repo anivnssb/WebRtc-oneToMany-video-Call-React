@@ -43,7 +43,7 @@ const Navbar = ({
         )}
       </div> */}
       <div className="navbar-right-side flex content-center items-center gap-5">
-        {hostORClient === 'host' && inCall||true ? (
+        {hostORClient === 'host' && inCall ? (
           <button
             className="add-new-client bg-transparent text-black dark:text-white  
             border-2 border-gray-800 dark:border-white border-solid rounded-3xl p-1.75 cursor-pointer 
