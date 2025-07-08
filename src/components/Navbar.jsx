@@ -2,7 +2,7 @@ import { FaAnglesDown } from 'react-icons/fa6';
 import BackArrowIcon from '../components/icons/BackArrowIcon';
 import { ThemeContext } from './ThemeContext';
 import { useContext } from 'react';
-import { FaMoon } from 'react-icons/fa';
+import { FaChevronLeft, FaMoon } from 'react-icons/fa';
 
 const Navbar = ({
   setHostORClient,
@@ -18,17 +18,17 @@ const Navbar = ({
 }) => {
   const {toggleTheme}=useContext(ThemeContext)
   return (
-    <div className="navbar bg-white dark:bg-black ">
-      <button
-        className="button back-arrow-button"
+    <div className="navbar bg-gray-200 dark:bg-gray-700 flex flex-row justify-between items-center p-2.5 pl-0 sticky top-0 z-999">
+      <div
+        className="p-2.5 cursor-pointer"
         onClick={() => {
           hangup();
           setHostORClient('');
         }}
       >
-        {' '}
-        <BackArrowIcon />
-      </button>
+        <FaChevronLeft className='text-black dark:text-white 
+        transition-colors delay-100 ease-linear hover:text-blue-400'/>
+      </div>
       {/* <div className="connection-status">
         {waitingForPeer ? (
           <h2> waiting for peer to respond... </h2>
@@ -42,11 +42,12 @@ const Navbar = ({
           </h1>
         )}
       </div> */}
-      <div className="navbar-right-side">
-        {hostORClient === 'host' && inCall ? (
+      <div className="navbar-right-side flex content-center items-center gap-5">
+        {hostORClient === 'host' && inCall||true ? (
           <button
-            className="add-new-client"
-            style={{ width: 'fit-content', height: 'fit-content' }}
+            className="add-new-client bg-transparent text-black dark:text-white  
+            border-2 border-gray-800 dark:border-white border-solid rounded-3xl p-1.75 cursor-pointer 
+            transition-colors delay-100 ease-linear hover:border-blue-400"
             onClick={() => {
               if (offer.length !== peerConnection.length) {
                 return;
@@ -68,7 +69,7 @@ const Navbar = ({
         )}
 
         <div
-          className={`offer-answer-expand-icon ${
+          className={`offer-answer-expand-icon p-2.5  ${
             offerAnswerVisibile ? 'roate-icon' : ''
           }`}
           onClick={() =>
@@ -78,10 +79,10 @@ const Navbar = ({
             })
           }
         >
-          <FaAnglesDown />
+          <FaAnglesDown  className='text-black dark:text-white transition-colors delay-100 ease-linear hover:text-blue-400 cursor-pointer'/>
         </div>
-        <div onClick={toggleTheme}>
-          <FaMoon className='text-black dark:text-white'/>
+        <div onClick={toggleTheme} className='p-2.5'>
+          <FaMoon className='text-black dark:text-white transition-colors delay-100 ease-linear hover:text-blue-400 cursor-pointer'/>
         </div>
       </div>
     </div>
