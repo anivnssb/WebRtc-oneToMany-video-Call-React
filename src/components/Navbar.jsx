@@ -69,8 +69,13 @@ const Navbar = ({
         )}
 
         <div
-          className={`offer-answer-expand-icon p-2.5  ${
-            offerAnswerVisibile ? 'roate-icon' : ''
+          className={`offer-answer-expand-icon p-2.5 cursor-pointer 
+            flex items-center content-center overflow-hidden 
+            text-black dark:text-white
+            hover:text-blue-400 
+            transition-all delay-200 ease-linear 
+            ${
+            offerAnswerVisibile ? 'roate-icon rotate-180  origin-center' : ''
           }`}
           onClick={() =>
             dispatch({
@@ -79,10 +84,12 @@ const Navbar = ({
             })
           }
         >
-          <FaAnglesDown  className='text-black dark:text-white transition-colors delay-100 ease-linear hover:text-blue-400 cursor-pointer'/>
+          <FaAnglesDown/>
         </div>
-        <div onClick={toggleTheme} className='p-2.5'>
-          <FaMoon className='text-black dark:text-white transition-colors delay-100 ease-linear hover:text-blue-400 cursor-pointer'/>
+        <div onClick={toggleTheme} className='p-2.5 text-black dark:text-white 
+        transition-colors delay-100 ease-linear 
+        hover:text-blue-400 cursor-pointer'>
+          <FaMoon />
         </div>
       </div>
     </div>
