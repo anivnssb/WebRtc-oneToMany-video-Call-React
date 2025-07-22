@@ -4,16 +4,7 @@ import { FaSpinner } from 'react-icons/fa';
 const SpinnerIcon = () => {
   return (
     <FaSpinner
-      className="spinner-icon"
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        fontSize: '40px',
-        color: '#fff',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 10,
-      }}
+      className="absolute top-1/2 left-1/2 text-4xl text-white -translate-x-1/2 -translate-y-1/2 z-10 animate-spin"
     />
   );
 };

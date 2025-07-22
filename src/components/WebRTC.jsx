@@ -345,7 +345,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
         }}
       />
 
-      <div className="call-section flex flex-column gap-5 content-start text-[beige] m-2.5 pt-2.5 pb-2.5 pl-3.75 pr-3.75">
+      <div className="relative flex flex-col gap-5 justify-start text-[beige] m-2.5 p-2.5 md:flex-row">
         <OfferAndAnswer
           {...{
             hostORClient,
@@ -358,17 +358,22 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             offerAnswerVisibile,
           }}
         />
-        <div className="pinned-state flex flex-row w-screen">
+        <div className="flex flex-row w-screen">
           <div
-            className={`local-remote-video-wraper ${
-              inCall
-                ? "connected grid grid-cols-[repeat(auto-fit, minmax(300px, 1fr))] gap-[1rem]"
-                : "notConnected flex flex-row w-screen"
-            } ${
-              pinnedClient
-                ? "pinned block mr-2.5 ml-3.75 max-h-[80vh] overflow-y-scroll basis-[30%]"
-                : ""
-            }`}
+            className={
+              [
+                // base styles for local-remote-video-wraper
+                'flex flex-col justify-center items-center w-full',
+                // connected state (grid on md+)
+                inCall
+                  ? 'md:grid md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] md:gap-4'
+                  : 'md:flex md:flex-row md:w-full',
+                // pinned state
+                pinnedClient
+                  ? 'md:block md:mr-2.5 md:ml-3.5 md:max-h-[80vh] md:overflow-y-scroll md:basis-[30%]'
+                  : '',
+              ].join(' ')
+            }
           >
             <LocalVideo
               {...{
@@ -402,7 +407,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
               : ""}
           </div>
           {pinnedClient ? (
-            <div className="pinned-section">
+            <div className="hidden md:flex justify-center items-center w-full md:basis-[70%]">
               <PinnedVideo
                 {...{
                   pinnedClient,

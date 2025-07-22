@@ -51,19 +51,20 @@ const RemoteVideo = ({
     }
   }, [stream]);
   return (
-    <div className="remote-video-container">
-      <div className="video-wraper">
+    <div className="text-center mb-2.5 w-fit">
+      <div className="relative p-2.5 flex justify-center items-center">
         <video
           key={index + 'remote-video-element'}
           ref={videoRef}
           autoPlay
+          className="w-full border-[5px] border-[#111211] rounded-2xl"
         ></video>
-        <div className="overlay">
+        <div className="absolute w-4/5 h-4/5 bg-transparent rounded-2xl left-0 right-0 mx-auto flex justify-center items-center group">
           <div
-            className="overlay-button-container"
+            className="flex justify-center items-center gap-4 w-1/2 h-1/2 bg-black/50 rounded-2xl invisible group-hover:visible"
             ref={overlayBtnContainerRef}
           >
-            <div className="ctrl-button-group1">
+            <div className="flex flex-col gap-2.5">
               {hostORClient === 'host' ? (
                 <button
                   onClick={() => {
@@ -72,14 +73,12 @@ const RemoteVideo = ({
                     );
                     hangupRemote(index);
                   }}
-                  className="hangup-button"
+                  className="bg-red-600 rounded-full border-none cursor-pointer flex"
                   style={{ padding: width * 0.05 }}
                 >
                   <ImPhoneHangUp color="white" size={width * 0.1} />
                 </button>
-              ) : (
-                ''
-              )}
+              ) : null}
               <button
                 onClick={() =>
                   dispatch({
@@ -87,7 +86,7 @@ const RemoteVideo = ({
                     payload: pinnedClient === stream?.id ? null : stream?.id,
                   })
                 }
-                className="pin-button"
+                className="bg-gray-400 rounded-full border-none cursor-pointer flex"
                 style={{ padding: width * 0.05 }}
               >
                 {pinnedClient !== stream?.id ? (
@@ -100,9 +99,9 @@ const RemoteVideo = ({
                 )}
               </button>
             </div>
-            <div className="ctrl-button-group2">
+            <div className="flex flex-col gap-2.5">
               <button
-                className="vdo-control-button "
+                className="bg-gray-400 rounded-full border-none cursor-pointer flex"
                 style={{ padding: width * 0.05 }}
                 onClick={goFullscreen}
               >
@@ -110,7 +109,7 @@ const RemoteVideo = ({
               </button>
               {mute ? (
                 <button
-                  className="vdo-control-button "
+                  className="bg-gray-400 rounded-full border-none cursor-pointer flex"
                   style={{ padding: width * 0.05 }}
                   onClick={() => muteUser(!mute)}
                 >
@@ -121,7 +120,7 @@ const RemoteVideo = ({
                 </button>
               ) : (
                 <button
-                  className="vdo-control-button "
+                  className="bg-gray-400 rounded-full border-none cursor-pointer flex"
                   style={{ padding: width * 0.05 }}
                   onClick={() => muteUser(!mute)}
                 >
@@ -130,11 +129,10 @@ const RemoteVideo = ({
               )}
             </div>
           </div>
-
           {!inCall ? <SpinnerIcon /> : ''}
         </div>
       </div>
-      <p>{`${
+      <p>{`$${
         hostORClient === 'client' ? 'Host' : 'Client ' + (index + 1)
       } `}</p>
     </div>

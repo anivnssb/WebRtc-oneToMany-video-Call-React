@@ -40,36 +40,34 @@ const PinnedVideo = ({
     }
   }, [stream]);
   return (
-    <div className="remote-video-container">
-      <div className="video-wraper">
-        <video ref={videoRef} autoPlay></video>
-        <div className="overlay">
+    <div className="text-center mb-2.5 w-fit">
+      <div className="relative p-2.5 flex justify-center items-center">
+        <video ref={videoRef} autoPlay className="w-full border-[5px] border-[#111211] rounded-2xl"></video>
+        <div className="absolute w-4/5 h-4/5 bg-transparent rounded-2xl left-0 right-0 mx-auto flex justify-center items-center group">
           <div
-            className="overlay-button-container"
+            className="flex justify-center items-center gap-4 w-1/2 h-1/2 bg-black/50 rounded-2xl invisible group-hover:visible"
             ref={overlayBtnContainerRef}
             width={800}
           >
-            <div className="ctrl-button-group1">
+            <div className="flex flex-col gap-2.5">
               {hostORClient === 'host' ? (
                 <button
                   onClick={() => {
-                    const index = remoteStreams.findIndex(
+                    const idx = remoteStreams.findIndex(
                       ({ id }) => id === stream?.id
                     );
-                    hangupRemote(index);
+                    hangupRemote(idx);
                     dispatch({
                       type: 'SET_PINNED_CLIENT',
                       payload: null,
                     });
                   }}
-                  className="hangup-button"
+                  className="bg-red-600 rounded-full border-none cursor-pointer flex"
                   style={{ padding: width * 0.05 }}
                 >
                   <ImPhoneHangUp color="white" size={width * 0.1} />
                 </button>
-              ) : (
-                ''
-              )}
+              ) : null}
               <button
                 onClick={() =>
                   dispatch({
@@ -77,16 +75,15 @@ const PinnedVideo = ({
                     payload: null,
                   })
                 }
-                className="pin-button"
+                className="bg-gray-400 rounded-full border-none cursor-pointer flex"
                 style={{ padding: width * 0.05 }}
               >
                 <FaThumbtackSlash color="rgb(50, 50, 50)" size={width * 0.1} />
               </button>
             </div>
-            <div className="ctrl-button-group1">
-              {' '}
+            <div className="flex flex-col gap-2.5">
               <button
-                className="vdo-control-button "
+                className="bg-gray-400 rounded-full border-none cursor-pointer flex"
                 style={{ padding: width * 0.05 }}
                 onClick={goFullscreen}
               >
@@ -94,7 +91,7 @@ const PinnedVideo = ({
               </button>
               {mute ? (
                 <button
-                  className="vdo-control-button "
+                  className="bg-gray-400 rounded-full border-none cursor-pointer flex"
                   style={{ padding: width * 0.05 }}
                   onClick={() => muteUser(!mute)}
                 >
@@ -105,7 +102,7 @@ const PinnedVideo = ({
                 </button>
               ) : (
                 <button
-                  className="vdo-control-button "
+                  className="bg-gray-400 rounded-full border-none cursor-pointer flex"
                   style={{ padding: width * 0.05 }}
                   onClick={() => muteUser(!mute)}
                 >
@@ -114,7 +111,6 @@ const PinnedVideo = ({
               )}
             </div>
           </div>
-          +
         </div>
       </div>
       <p>{`${
