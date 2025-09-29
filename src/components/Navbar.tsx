@@ -1,7 +1,20 @@
 import { FaAnglesDown } from "react-icons/fa6";
 import BackArrowIcon from "./icons/BackArrowIcon";
+import type React from "react";
+interface NavbarProps {
+  setHostORClient: React.Dispatch<React.SetStateAction<string>>;
+  hostORClient: string;
+  inCall: boolean;
+  dispatch: React.Dispatch<any>;
+  answer: string[];
+  createNewPeerConnectionForRemote: () => Promise<void>;
+  peerConnection: RTCPeerConnection[];
+  offer: [];
+  offerAnswerVisibile: string;
+  hangup: () => void;
+}
 
-const Navbar = ({
+const Navbar: React.FC<NavbarProps> = ({
   setHostORClient,
   hostORClient,
   inCall,
