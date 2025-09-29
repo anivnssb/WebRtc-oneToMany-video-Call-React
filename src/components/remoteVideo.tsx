@@ -1,14 +1,25 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 import {
   FaExpand,
   FaMicrophone,
   FaMicrophoneSlash,
   FaThumbtack,
-} from 'react-icons/fa';
-import { ImPhoneHangUp } from 'react-icons/im';
-import useObserveWidth from '../hooks/useObserveWidth';
-import { FaThumbtackSlash } from 'react-icons/fa6';
-import SpinnerIcon from './icons/SpinnerIcon';
+} from "react-icons/fa";
+import { ImPhoneHangUp } from "react-icons/im";
+import useObserveWidth from "../hooks/useObserveWidth";
+import { FaThumbtackSlash } from "react-icons/fa6";
+import SpinnerIcon from "./icons/SpinnerIcon";
+
+interface RemoteVideoProps {
+  index: number;
+  stream: MediaStream;
+  hangupRemote: (index: number) => Promise<void>;
+  hostORClient: string;
+  dispatch: React.Dispatch<any>;
+  pinnedClient: string | null;
+  inCall: boolean;
+  remoteStreams: MediaStream[];
+}
 
 const RemoteVideo = ({
   index,
@@ -19,23 +30,24 @@ const RemoteVideo = ({
   pinnedClient,
   inCall,
   remoteStreams,
-}) => {
-  const videoRef = useRef(null);
+}: RemoteVideoProps) => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [overlayBtnContainerRef, width] = useObserveWidth();
   const [mute, setMute] = useState(true);
 
   const goFullscreen = () => {
     const video = videoRef.current;
-    if (video.requestFullscreen) {
-      video.requestFullscreen();
-    } else if (video.webkitRequestFullscreen) {
-      video.webkitRequestFullscreen(); // Safari
-    } else if (video.msRequestFullscreen) {
-      video.msRequestFullscreen(); // IE
+    if (video?.requestFullscreen) {
+      video?.requestFullscreen();
     }
+    //  else if (video.webkitRequestFullscreen) {
+    //   video.webkitRequestFullscreen(); // Safari
+    // } else if (video.msRequestFullscreen) {
+    //   video.msRequestFullscreen(); // IE
+    // }
   };
 
-  const muteUser = (bool) => {
+  const muteUser = (bool: boolean) => {
     if (videoRef.current) {
       videoRef.current.muted = bool;
       setMute(bool);
@@ -44,7 +56,8 @@ const RemoteVideo = ({
 
   useEffect(() => {
     if (videoRef.current && stream) {
-      if (videoRef.current.srcObject?.id !== stream?.id) {
+      const currentStream = videoRef.current.srcObject as MediaStream | null;
+      if (currentStream?.id !== stream?.id) {
         videoRef.current.muted = true;
         videoRef.current.srcObject = stream;
       }
@@ -54,7 +67,7 @@ const RemoteVideo = ({
     <div className="remote-video-container">
       <div className="video-wraper">
         <video
-          key={index + 'remote-video-element'}
+          key={index + "remote-video-element"}
           ref={videoRef}
           autoPlay
         ></video>
@@ -64,7 +77,7 @@ const RemoteVideo = ({
             ref={overlayBtnContainerRef}
           >
             <div className="ctrl-button-group1">
-              {hostORClient === 'host' ? (
+              {hostORClient === "host" ? (
                 <button
                   onClick={() => {
                     const index = remoteStreams.findIndex(
@@ -78,12 +91,12 @@ const RemoteVideo = ({
                   <ImPhoneHangUp color="white" size={width * 0.1} />
                 </button>
               ) : (
-                ''
+                ""
               )}
               <button
                 onClick={() =>
                   dispatch({
-                    type: 'SET_PINNED_CLIENT',
+                    type: "SET_PINNED_CLIENT",
                     payload: pinnedClient === stream?.id ? null : stream?.id,
                   })
                 }
@@ -131,11 +144,11 @@ const RemoteVideo = ({
             </div>
           </div>
 
-          {!inCall ? <SpinnerIcon /> : ''}
+          {!inCall ? <SpinnerIcon /> : ""}
         </div>
       </div>
       <p>{`${
-        hostORClient === 'client' ? 'Host' : 'Client ' + (index + 1)
+        hostORClient === "client" ? "Host" : "Client " + (index + 1)
       } `}</p>
     </div>
   );
