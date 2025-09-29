@@ -1,12 +1,19 @@
-import { useEffect, useRef, useReducer } from 'react';
-import LocalVideo from './localVideo';
-import OfferAndAnswer from './OfferAndAnswer';
-import Navbar from './Navbar';
-import { initialState, reducerFunction } from '../state/stateAndReducer';
-import RemoteVideo from './remoteVideo';
-import PinnedVideo from './PinnedVideo';
-import MeetingEnded from './MeetingEnded';
-const WebRTC = ({ hostORClient, setHostORClient }) => {
+import { useEffect, useRef, useReducer } from "react";
+import LocalVideo from "./localVideo";
+import OfferAndAnswer from "./OfferAndAnswer";
+import Navbar from "./Navbar";
+import { initialState, reducerFunction } from "../state/stateAndReducer";
+import RemoteVideo from "./remoteVideo";
+import PinnedVideo from "./PinnedVideo";
+import MeetingEnded from "./MeetingEnded";
+interface WebRTCProps {
+  setHostORClient: React.Dispatch<React.SetStateAction<string>>;
+  hostORClient: string;
+}
+const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
+  interface ExtendedRTCPeerConnection extends RTCPeerConnection {
+    pcid: number;
+  }
   const [state, dispatch] = useReducer(reducerFunction, initialState);
   const {
     inCall,
@@ -18,13 +25,12 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     offerAnswerVisibile,
     isMeetingEnded,
   } = state;
-
-  const localVideoRef = useRef(null);
-  const peerConnection = useRef([]);
-  const remoteStreamsRef = useRef();
-  const answerRef = useRef([]);
+  const localVideoRef = useRef<HTMLVideoElement | null>(null);
+  const peerConnection = useRef<ExtendedRTCPeerConnection[]>([]);
+  const remoteStreamsRef = useRef<MediaStream[] | null>(null);
+  const answerRef = useRef<string[]>([]);
   const offerRef = useRef([]);
-  const pinnedClientRef = useRef(null);
+  const pinnedClientRef = useRef<string>(null);
 
   useEffect(() => {
     remoteStreamsRef.current = remoteStreams.concat([]);
@@ -43,29 +49,32 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     createPeerConnection();
   }, []);
 
-  function registerPeerConnectionListeners(peeerConnection, pcid) {
-    peeerConnection.addEventListener('icegatheringstatechange', () => {
+  function registerPeerConnectionListeners(
+    peeerConnection: RTCPeerConnection,
+    pcid: number
+  ) {
+    peeerConnection.addEventListener("icegatheringstatechange", () => {
       console.log(
         `ICE gathering state changed: ${peeerConnection.iceGatheringState}`
       );
     });
 
-    peeerConnection.addEventListener('connectionstatechange', () => {
+    peeerConnection.addEventListener("connectionstatechange", () => {
       console.log(
         `Connection state change: ${peeerConnection.connectionState}`
       );
 
       switch (peeerConnection.connectionState) {
-        case 'connecting':
-          dispatch({ type: 'SET_WAITING_FOR_PEER', payload: true });
+        case "connecting":
+          dispatch({ type: "SET_WAITING_FOR_PEER", payload: true });
           break;
 
-        case 'connected':
-          dispatch({ type: 'SET_IN_CALL', payload: true });
-          dispatch({ type: 'SET_WAITING_FOR_PEER', payload: false });
+        case "connected":
+          dispatch({ type: "SET_IN_CALL", payload: true });
+          dispatch({ type: "SET_WAITING_FOR_PEER", payload: false });
           break;
 
-        case 'disconnected':
+        case "disconnected":
           if (pcid) {
             const index = peerConnection.current.findIndex(
               (pc) => pc.pcid == pcid
@@ -74,17 +83,19 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             peeerConnection.close();
             const updatedOffers = [...offerRef.current];
             updatedOffers.splice(index, 1);
-            dispatch({ type: 'SET_OFFER', payload: updatedOffers });
+            dispatch({ type: "SET_OFFER", payload: updatedOffers });
 
             const updatedAnswers = [...answerRef.current];
             updatedAnswers.splice(index, 1);
-            dispatch({ type: 'SET_ANSWER', payload: updatedAnswers });
+            dispatch({ type: "SET_ANSWER", payload: updatedAnswers });
 
-            const updatedStreams = [...remoteStreamsRef.current];
+            const updatedStreams = remoteStreamsRef.current
+              ? [...remoteStreamsRef.current]
+              : [];
             const removedStream = updatedStreams.splice(index, 1);
-            dispatch({ type: 'SET_REMOTE_STREAMS', payload: updatedStreams });
+            dispatch({ type: "SET_REMOTE_STREAMS", payload: updatedStreams });
             if (removedStream[0].id === pinnedClientRef.current) {
-              dispatch({ type: 'SET_PINNED_CLIENT', payload: null });
+              dispatch({ type: "SET_PINNED_CLIENT", payload: null });
             }
 
             const updatedPeerConnections = [...peerConnection.current];
@@ -92,42 +103,48 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
             peerConnection.current = updatedPeerConnections;
 
             if (updatedPeerConnections.length === 0) {
-              dispatch({ type: 'SET_IN_CALL', payload: false });
-              dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
-              localVideoRef.current.srcObject.getAudioTracks()[0].enabled = false;
-              localVideoRef.current.srcObject.getVideoTracks()[0].enabled = false;
+              dispatch({ type: "SET_IN_CALL", payload: false });
+              dispatch({ type: "SET_IS_MEETING_ENDED", payload: true });
+              if (localVideoRef.current) {
+                const stream = localVideoRef.current
+                  .srcObject as MediaStream | null;
+                if (stream) {
+                  stream.getAudioTracks()[0].enabled = false;
+                  stream.getVideoTracks()[0].enabled = false;
+                }
+              }
             }
-            console.log('Disconnected from peer');
+            console.log("Disconnected from peer");
             break;
           }
       }
     });
 
-    peeerConnection.addEventListener('signalingstatechange', () => {
+    peeerConnection.addEventListener("signalingstatechange", () => {
       console.log(`Signaling state change: ${peeerConnection.signalingState}`);
     });
 
-    peeerConnection.addEventListener('iceconnectionstatechange ', () => {
+    peeerConnection.addEventListener("iceconnectionstatechange ", () => {
       console.log(
         `ICE connection state change: ${peeerConnection.iceConnectionState}`
       );
     });
   }
 
-  const createNewPeerConnectionForRemote = async () => {
-    const pc = new RTCPeerConnection();
+  const createNewPeerConnectionForRemote = async (): Promise<void> => {
+    const pc = new RTCPeerConnection() as ExtendedRTCPeerConnection;
     registerPeerConnectionListeners(
       pc,
       peerConnection.current[peerConnection.current.length - 1].pcid + 1
     );
-    const localStream = localVideoRef.current?.srcObject;
+    const localStream = localVideoRef.current?.srcObject as MediaStream;
     if (localStream) {
       localStream.getTracks().forEach((track) => {
         pc.addTrack(track, localStream);
       });
     } else {
       throw new Error(
-        'Local stream is not available, please check your camera and microphone'
+        "Local stream is not available, please check your camera and microphone"
       );
     }
     pc.ontrack = async (event) => {
@@ -136,7 +153,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
         remoteStream.addTrack(track);
       });
       dispatch({
-        type: 'SET_REMOTE_STREAMS',
+        type: "SET_REMOTE_STREAMS",
         payload: [...remoteStreams, remoteStream],
       });
     };
@@ -144,7 +161,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       peerConnection.current[peerConnection.current.length - 1].pcid + 1;
     peerConnection.current = [...peerConnection.current, pc];
 
-    console.log('New Peer Connection ForRemote created');
+    console.log("New Peer Connection ForRemote created");
   };
   const createPeerConnection = async () => {
     const localStream = await navigator.mediaDevices.getUserMedia({
@@ -153,8 +170,8 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     });
     localStream.getAudioTracks()[0].enabled = false;
     localStream.getVideoTracks()[0].enabled = false;
-    localVideoRef.current.srcObject = localStream;
-    const pc = new RTCPeerConnection();
+    if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
+    const pc = new RTCPeerConnection() as ExtendedRTCPeerConnection;
     registerPeerConnectionListeners(pc, 1);
 
     if (localStream) {
@@ -163,7 +180,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
       });
     } else {
       throw new Error(
-        'Local stream is not available, please check your camera and microphone'
+        "Local stream is not available, please check your camera and microphone"
       );
     }
     pc.ontrack = async (event) => {
@@ -172,7 +189,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
         remoteStream.addTrack(track);
       });
       dispatch({
-        type: 'SET_REMOTE_STREAMS',
+        type: "SET_REMOTE_STREAMS",
         payload: [...remoteStreams, remoteStream],
       });
     };
@@ -180,26 +197,26 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     peerConnection.current = [pc];
   };
 
-  const generateIceCandidate = (peerType) => {
+  const generateIceCandidate = (peerType: string) => {
     if (!peerConnection.current[peerConnection.current.length - 1]) {
-      throw new Error('Peer connection is not available');
+      throw new Error("Peer connection is not available");
     }
     peerConnection.current[peerConnection.current.length - 1].onicecandidate = (
       event
     ) => {
       if (event.candidate) {
-        if (peerType === 'caller') {
+        if (peerType === "caller") {
           dispatch({
-            type: 'SET_OFFER',
+            type: "SET_OFFER",
             payload: [
               ...offer,
               peerConnection.current[peerConnection.current.length - 1]
                 ?.localDescription,
             ],
           });
-        } else if (peerType === 'receiver') {
+        } else if (peerType === "receiver") {
           dispatch({
-            type: 'SET_ANSWER',
+            type: "SET_ANSWER",
             payload: [
               ...answer,
               peerConnection.current[peerConnection.current.length - 1]
@@ -208,7 +225,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           });
         } else {
           throw new Error(
-            'Peer type is not available, please look into generating ice candidate'
+            "Peer type is not available, please look into generating ice candidate"
           );
         }
       }
@@ -217,66 +234,76 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
 
   const hangupHost = async () => {
     for (const pc of peerConnection.current) {
-      await pc.close();
+      pc.close();
     }
-    dispatch({ type: 'SET_IN_CALL', payload: false });
-    dispatch({ type: 'SET_OFFER', payload: [] });
-    dispatch({ type: 'SET_ANSWER', payload: [] });
-    dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
-    dispatch({ type: 'SET_PINNED_CLIENT', payload: null });
-    dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
-    localVideoRef.current.srcObject.getAudioTracks()[0].enabled = false;
-    localVideoRef.current.srcObject.getVideoTracks()[0].enabled = false;
+    dispatch({ type: "SET_IN_CALL", payload: false });
+    dispatch({ type: "SET_OFFER", payload: [] });
+    dispatch({ type: "SET_ANSWER", payload: [] });
+    dispatch({ type: "SET_REMOTE_STREAMS", payload: [] });
+    dispatch({ type: "SET_PINNED_CLIENT", payload: null });
+    dispatch({ type: "SET_IS_MEETING_ENDED", payload: true });
+    if (localVideoRef.current) {
+      const stream = localVideoRef.current.srcObject as MediaStream | null;
+      if (stream) {
+        stream.getAudioTracks()[0].enabled = false;
+        stream.getVideoTracks()[0].enabled = false;
+      }
+    }
     peerConnection.current = [];
   };
   const hangupClient = async () => {
-    await peerConnection.current[0].close();
-    dispatch({ type: 'SET_IN_CALL', payload: false });
-    dispatch({ type: 'SET_OFFER', payload: [] });
-    dispatch({ type: 'SET_ANSWER', payload: [] });
-    dispatch({ type: 'SET_REMOTE_STREAMS', payload: [] });
-    dispatch({ type: 'SET_PINNED_CLIENT', payload: null });
-    dispatch({ type: 'SET_IS_MEETING_ENDED', payload: true });
-    localVideoRef.current.srcObject.getAudioTracks()[0].enabled = false;
-    localVideoRef.current.srcObject.getVideoTracks()[0].enabled = false;
+    peerConnection.current[0].close();
+    dispatch({ type: "SET_IN_CALL", payload: false });
+    dispatch({ type: "SET_OFFER", payload: [] });
+    dispatch({ type: "SET_ANSWER", payload: [] });
+    dispatch({ type: "SET_REMOTE_STREAMS", payload: [] });
+    dispatch({ type: "SET_PINNED_CLIENT", payload: null });
+    dispatch({ type: "SET_IS_MEETING_ENDED", payload: true });
+    if (localVideoRef.current) {
+      const stream = localVideoRef.current.srcObject as MediaStream | null;
+      if (stream) {
+        stream.getAudioTracks()[0].enabled = false;
+        stream.getVideoTracks()[0].enabled = false;
+      }
+    }
     peerConnection.current = [];
   };
-  const hangupRemote = async (index) => {
+  const hangupRemote = async (index: number) => {
     if (!peerConnection.current[index]) {
-      throw new Error('Peer connection is not available');
+      throw new Error("Peer connection is not available");
     }
     if (peerConnection.current.length === 1) {
       hangupHost();
       return;
     }
-    await peerConnection.current[index].close();
+    peerConnection.current[index].close();
     const offerCopy = [...offer];
     offerCopy.splice(index, 1);
-    dispatch({ type: 'SET_OFFER', payload: offerCopy });
+    dispatch({ type: "SET_OFFER", payload: offerCopy });
 
     const answerCopy = [...answer];
     answerCopy.splice(index, 1);
-    dispatch({ type: 'SET_ANSWER', payload: answerCopy });
+    dispatch({ type: "SET_ANSWER", payload: answerCopy });
 
     const updatedRemoteStreams = [...remoteStreams];
     const removedStream = updatedRemoteStreams.splice(index, 1);
-    dispatch({ type: 'SET_REMOTE_STREAMS', payload: updatedRemoteStreams });
+    dispatch({ type: "SET_REMOTE_STREAMS", payload: updatedRemoteStreams });
     if (removedStream[0].id === pinnedClient) {
-      dispatch({ type: 'SET_PINNED_CLIENT', payload: null });
+      dispatch({ type: "SET_PINNED_CLIENT", payload: null });
     }
 
     const peerConnectionCopy = [...peerConnection.current];
     peerConnectionCopy.splice(index, 1);
     peerConnection.current = peerConnectionCopy;
-    console.log('peer connection for Remote closed');
+    console.log("peer connection for Remote closed");
   };
 
   const startCall = async () => {
     if (!peerConnection.current[peerConnection.current.length - 1]) {
-      throw new Error('Peer connection is not available');
+      throw new Error("Peer connection is not available");
     }
 
-    generateIceCandidate('caller');
+    generateIceCandidate("caller");
 
     const offerDescription = await peerConnection.current[
       peerConnection.current.length - 1
@@ -286,16 +313,16 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     ].setLocalDescription(offerDescription);
   };
 
-  const onAnswer = async (answer) => {
+  const onAnswer = async (answer: { sdp: string; type: RTCSdpType }) => {
     if (!peerConnection.current[peerConnection.current.length - 1]) {
-      throw new Error('Peer connection is not available');
+      throw new Error("Peer connection is not available");
     }
 
     if (
       peerConnection.current[peerConnection.current.length - 1]
         .currentRemoteDescription
     ) {
-      console.log('Remote description already set');
+      console.log("Remote description already set");
       return;
     }
 
@@ -303,12 +330,12 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
     await peerConnection.current[
       peerConnection.current.length - 1
     ].setRemoteDescription(answerDescription);
-    dispatch({ type: 'SET_IN_CALL', payload: true });
+    dispatch({ type: "SET_IN_CALL", payload: true });
   };
 
   const answerCall = async () => {
     try {
-      generateIceCandidate('receiver');
+      generateIceCandidate("receiver");
       const offerr = await JSON.parse(offer[offer.length - 1]);
       const offerDescription = new RTCSessionDescription(offerr);
       await peerConnection.current[
@@ -322,7 +349,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
         peerConnection.current.length - 1
       ].setLocalDescription(answerDescription);
     } catch (error) {
-      console.error('Error answering call:', error);
+      console.error("Error answering call:", error);
     }
   };
   return (
@@ -339,7 +366,7 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
           answer,
           createNewPeerConnectionForRemote,
           offerAnswerVisibile,
-          hangup: hostORClient === 'host' ? hangupHost : hangupClient,
+          hangup: hostORClient === "host" ? hangupHost : hangupClient,
         }}
       />
 
@@ -359,20 +386,20 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
         <div className="pinned-state">
           <div
             className={`local-remote-video-wraper ${
-              inCall ? 'connected' : 'notConnected'
-            } ${pinnedClient ? 'pinned' : ''}`}
+              inCall ? "connected" : "notConnected"
+            } ${pinnedClient ? "pinned" : ""}`}
           >
             <LocalVideo
               {...{
                 localVideoRef,
                 inCall,
-                hangup: hostORClient === 'host' ? hangupHost : hangupClient,
+                hangup: hostORClient === "host" ? hangupHost : hangupClient,
                 pinnedClient,
               }}
               key="localvdo-123"
             />
             {remoteStreams.length
-              ? remoteStreams.map((stream, index) => {
+              ? remoteStreams.map((stream: MediaStream, index: number) => {
                   if (pinnedClient !== stream.id) {
                     return (
                       <RemoteVideo
@@ -386,12 +413,12 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
                           inCall,
                           remoteStreams,
                         }}
-                        key={index + 'remote-video-component'}
+                        key={index + "remote-video-component"}
                       />
                     );
                   }
                 })
-              : ''}
+              : ""}
           </div>
           {pinnedClient ? (
             <div className="pinned-section">
@@ -404,20 +431,22 @@ const WebRTC = ({ hostORClient, setHostORClient }) => {
                   remoteStreams,
                   stream:
                     remoteStreams[
-                      remoteStreams.findIndex(({ id }) => id === pinnedClient)
+                      remoteStreams.findIndex(
+                        ({ id }: { id: string }) => id === pinnedClient
+                      )
                     ],
                   index: remoteStreams.findIndex(
-                    ({ id }) => id === pinnedClient
+                    ({ id }: { id: string }) => id === pinnedClient
                   ),
                 }}
               />
             </div>
           ) : (
-            ''
+            ""
           )}
         </div>
       </div>
-      {isMeetingEnded ? <MeetingEnded {...{ setHostORClient }} /> : ''}
+      {isMeetingEnded ? <MeetingEnded {...{ setHostORClient }} /> : ""}
     </div>
   );
 };
