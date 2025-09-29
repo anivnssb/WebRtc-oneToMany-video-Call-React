@@ -1,9 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import useObserveWidth from '../hooks/useObserveWidth';
-import { ImPhoneHangUp } from 'react-icons/im';
-import { FaThumbtackSlash } from 'react-icons/fa6';
-import { FaExpand, FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
+import React, { useEffect, useRef, useState } from "react";
+import useObserveWidth from "../hooks/useObserveWidth";
+import { ImPhoneHangUp } from "react-icons/im";
+import { FaThumbtackSlash } from "react-icons/fa6";
+import { FaExpand, FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
 
+interface PinnedVideoProps {
+  hangupRemote: (index: number) => void;
+  hostORClient: string;
+  dispatch: React.Dispatch<any>;
+  stream: MediaStream;
+  index: number;
+  remoteStreams: MediaStream[];
+}
 const PinnedVideo = ({
   hangupRemote,
   dispatch,
@@ -11,21 +19,22 @@ const PinnedVideo = ({
   stream,
   index,
   remoteStreams,
-}) => {
-  const videoRef = useRef(null);
+}: PinnedVideoProps) => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [overlayBtnContainerRef, width] = useObserveWidth();
   const [mute, setMute] = useState(true);
   const goFullscreen = () => {
     const video = videoRef.current;
-    if (video.requestFullscreen) {
+    if (video?.requestFullscreen) {
       video.requestFullscreen();
-    } else if (video.webkitRequestFullscreen) {
-      video.webkitRequestFullscreen(); // Safari
-    } else if (video.msRequestFullscreen) {
-      video.msRequestFullscreen(); // IE
     }
+    // else if (video.webkitRequestFullscreen) {
+    //   video.webkitRequestFullscreen(); // Safari
+    // } else if (video.msRequestFullscreen) {
+    //   video.msRequestFullscreen(); // IE
+    // }
   };
-  const muteUser = (bool) => {
+  const muteUser = (bool: boolean) => {
     if (videoRef.current) {
       videoRef.current.muted = bool;
       setMute(bool);
@@ -33,7 +42,9 @@ const PinnedVideo = ({
   };
   useEffect(() => {
     if (videoRef.current && stream) {
-      if (videoRef.current.srcObject?.id !== stream?.id) {
+      const currentStream = videoRef.current.srcObject as MediaStream | null;
+
+      if (currentStream?.id !== stream.id) {
         videoRef.current.muted = true;
         videoRef.current.srcObject = stream;
       }
@@ -47,10 +58,9 @@ const PinnedVideo = ({
           <div
             className="overlay-button-container"
             ref={overlayBtnContainerRef}
-            width={800}
           >
             <div className="ctrl-button-group1">
-              {hostORClient === 'host' ? (
+              {hostORClient === "host" ? (
                 <button
                   onClick={() => {
                     const index = remoteStreams.findIndex(
@@ -58,7 +68,7 @@ const PinnedVideo = ({
                     );
                     hangupRemote(index);
                     dispatch({
-                      type: 'SET_PINNED_CLIENT',
+                      type: "SET_PINNED_CLIENT",
                       payload: null,
                     });
                   }}
@@ -68,12 +78,12 @@ const PinnedVideo = ({
                   <ImPhoneHangUp color="white" size={width * 0.1} />
                 </button>
               ) : (
-                ''
+                ""
               )}
               <button
                 onClick={() =>
                   dispatch({
-                    type: 'SET_PINNED_CLIENT',
+                    type: "SET_PINNED_CLIENT",
                     payload: null,
                   })
                 }
@@ -84,7 +94,7 @@ const PinnedVideo = ({
               </button>
             </div>
             <div className="ctrl-button-group1">
-              {' '}
+              {" "}
               <button
                 className="vdo-control-button "
                 style={{ padding: width * 0.05 }}
@@ -118,7 +128,7 @@ const PinnedVideo = ({
         </div>
       </div>
       <p>{`${
-        hostORClient === 'client' ? 'Host' : 'Client ' + (index + 1)
+        hostORClient === "client" ? "Host" : "Client " + (index + 1)
       } `}</p>
     </div>
   );
