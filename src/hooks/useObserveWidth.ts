@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from "react";
 
-const useObserveWidth = () => {
-  const elementRef = useRef(null);
-  const [width, setWidth] = useState(0);
+const useObserveWidth = (): [RefObject<HTMLDivElement | null>, number] => {
+  const elementRef = useRef<HTMLDivElement | null>(null);
+  const [width, setWidth] = useState<number>(0);
 
   useEffect(() => {
     const updateWidth = () => {

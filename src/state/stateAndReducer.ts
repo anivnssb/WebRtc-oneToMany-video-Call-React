@@ -2,9 +2,9 @@ interface InitialStateInterface {
   inCall: boolean;
   isMeetingEnded: boolean;
   waitingForPeer: boolean;
-  remoteStreams: [];
-  offer: [];
-  answer: [];
+  remoteStreams: MediaStream[];
+  offer: string[];
+  answer: string[];
   pinnedClient: string | null;
   offerAnswerVisibile: boolean;
 }

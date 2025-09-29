@@ -29,7 +29,7 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
   const peerConnection = useRef<ExtendedRTCPeerConnection[]>([]);
   const remoteStreamsRef = useRef<MediaStream[] | null>(null);
   const answerRef = useRef<string[]>([]);
-  const offerRef = useRef([]);
+  const offerRef = useRef<string[]>([]);
   const pinnedClientRef = useRef<string>(null);
 
   useEffect(() => {
