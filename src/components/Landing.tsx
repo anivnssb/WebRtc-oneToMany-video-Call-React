@@ -1,6 +1,10 @@
-import React from 'react';
+import React from "react";
+interface LandingProps {
+  hostORClient: string;
+  setHostORClient: React.Dispatch<React.SetStateAction<string>>;
+}
 
-const Landing = ({ setHostORClient }) => {
+const Landing: React.FC<LandingProps> = ({ setHostORClient }) => {
   return (
     <div className="Landing" data-testid="landing-page">
       <div className="landing-text">
@@ -10,13 +14,13 @@ const Landing = ({ setHostORClient }) => {
 
         <button
           className="button-one disable-text-selection"
-          onClick={() => setHostORClient('host')}
+          onClick={() => setHostORClient("host")}
         >
           Start a Meeting
         </button>
         <button
           className="button-one disable-text-selection"
-          onClick={() => setHostORClient('client')}
+          onClick={() => setHostORClient("client")}
         >
           Join a Meeting
         </button>
