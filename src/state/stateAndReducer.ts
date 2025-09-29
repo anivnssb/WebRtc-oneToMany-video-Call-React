@@ -1,3 +1,13 @@
+interface InitialStateInterface {
+  inCall: boolean;
+  isMeetingEnded: boolean;
+  waitingForPeer: boolean;
+  remoteStreams: [];
+  offer: [];
+  answer: [];
+  pinnedClient: string | null;
+  offerAnswerVisibile: boolean;
+}
 export const initialState = {
   inCall: false,
   isMeetingEnded: false,
@@ -9,25 +19,28 @@ export const initialState = {
   offerAnswerVisibile: true,
 };
 
-export const reducerFunction = (state, action) => {
+export const reducerFunction = (
+  state: InitialStateInterface,
+  action: { payload: any; type: string }
+) => {
   switch (action.type) {
-    case 'SET_LOADING':
+    case "SET_LOADING":
       return { ...state, isLoading: action.payload };
-    case 'SET_IN_CALL':
+    case "SET_IN_CALL":
       return { ...state, inCall: action.payload };
-    case 'SET_IS_MEETING_ENDED':
+    case "SET_IS_MEETING_ENDED":
       return { ...state, isMeetingEnded: action.payload };
-    case 'SET_WAITING_FOR_PEER':
+    case "SET_WAITING_FOR_PEER":
       return { ...state, waitingForPeer: action.payload };
-    case 'SET_REMOTE_STREAMS':
+    case "SET_REMOTE_STREAMS":
       return { ...state, remoteStreams: action.payload };
-    case 'SET_OFFER':
+    case "SET_OFFER":
       return { ...state, offer: action.payload };
-    case 'SET_ANSWER':
+    case "SET_ANSWER":
       return { ...state, answer: action.payload };
-    case 'SET_PINNED_CLIENT':
+    case "SET_PINNED_CLIENT":
       return { ...state, pinnedClient: action.payload };
-    case 'OFFER_ANSWER_VISIBLE':
+    case "OFFER_ANSWER_VISIBLE":
       return { ...state, offerAnswerVisibile: action.payload };
     default:
       return state;
