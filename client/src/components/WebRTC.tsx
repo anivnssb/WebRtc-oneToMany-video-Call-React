@@ -6,11 +6,20 @@ import { initialState, reducerFunction } from "../state/stateAndReducer";
 import RemoteVideo from "./remoteVideo";
 import PinnedVideo from "./PinnedVideo";
 import MeetingEnded from "./MeetingEnded";
+import { io } from "socket.io-client";
 interface WebRTCProps {
   setHostORClient: React.Dispatch<React.SetStateAction<string>>;
   hostORClient: string;
 }
 const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
+  const socket = io("http://localhost:3000"); // Example for a server on port 3001
+  socket.on("connect", () => {
+    console.log("Successfully connected to Socket.IO server!");
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Disconnected from Socket.IO server.");
+  });
   interface ExtendedRTCPeerConnection extends RTCPeerConnection {
     pcid: number;
   }
