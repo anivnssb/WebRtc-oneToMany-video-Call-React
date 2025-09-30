@@ -6,13 +6,16 @@ import { initialState, reducerFunction } from "../state/stateAndReducer";
 import RemoteVideo from "./remoteVideo";
 import PinnedVideo from "./PinnedVideo";
 import MeetingEnded from "./MeetingEnded";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
+import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 interface WebRTCProps {
   setHostORClient: React.Dispatch<React.SetStateAction<string>>;
   hostORClient: string;
 }
 const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
-  const socket = io("http://localhost:3000"); // Example for a server on port 3001
+  const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+    "http://localhost:3000"
+  );
   socket.on("connect", () => {
     console.log("Successfully connected to Socket.IO server!");
   });
@@ -390,6 +393,7 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
             answer,
             dispatch,
             offerAnswerVisibile,
+            socket,
           }}
         />
         <div className="pinned-state">

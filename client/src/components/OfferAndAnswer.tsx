@@ -1,3 +1,6 @@
+import type { Socket } from "socket.io-client";
+import type { ClientToServerEvents, ServerToClientEvents } from "../types";
+
 interface OfferAndAnswerProps {
   hostORClient: string;
   dispatch: React.Dispatch<any>;
@@ -7,6 +10,7 @@ interface OfferAndAnswerProps {
   answerCall: () => Promise<void>;
   onAnswer: (answer: { sdp: string; type: RTCSdpType }) => Promise<void>;
   offerAnswerVisibile: string;
+  socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 }
 const OfferAndAnswer = ({
   offer,
@@ -17,6 +21,7 @@ const OfferAndAnswer = ({
   dispatch,
   onAnswer,
   offerAnswerVisibile,
+  socket,
 }: OfferAndAnswerProps) => {
   const copyText = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -55,7 +60,13 @@ const OfferAndAnswer = ({
             </button>
             <button
               className="button-two disable-text-selection"
-              onClick={() => copyText(JSON.stringify(offer[offer.length - 1]))}
+              onClick={() => {
+                copyText(JSON.stringify(offer[offer.length - 1]));
+                socket.emit("sendHostOffer", {
+                  email: "anvinssb@gmail.com",
+                  offer: JSON.stringify(offer[offer.length - 1]),
+                });
+              }}
             >
               Copy Offer{" "}
             </button>
