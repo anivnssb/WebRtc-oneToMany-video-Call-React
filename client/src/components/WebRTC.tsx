@@ -16,13 +16,15 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
   const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
     "http://localhost:3000"
   );
-  socket.on("connect", () => {
-    console.log("Successfully connected to Socket.IO server!");
-  });
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Successfully connected to Socket.IO server!");
+    });
 
-  socket.on("disconnect", () => {
-    console.log("Disconnected from Socket.IO server.");
-  });
+    socket.on("disconnect", () => {
+      console.log("Disconnected from Socket.IO server.");
+    });
+  }, []);
   interface ExtendedRTCPeerConnection extends RTCPeerConnection {
     pcid: number;
   }
