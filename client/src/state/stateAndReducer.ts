@@ -3,20 +3,22 @@ interface InitialStateInterface {
   isMeetingEnded: boolean;
   waitingForPeer: boolean;
   remoteStreams: MediaStream[];
-  offer: string[];
-  answer: string[];
+  offer: string;
+  answer: string;
   pinnedClient: string | null;
   offerAnswerVisibile: boolean;
+  email: string;
 }
 export const initialState = {
   inCall: false,
   isMeetingEnded: false,
   waitingForPeer: false,
   remoteStreams: [],
-  offer: [],
-  answer: [],
+  offer: "",
+  answer: "",
   pinnedClient: null,
   offerAnswerVisibile: true,
+  email: "",
 };
 
 export const reducerFunction = (
@@ -42,6 +44,8 @@ export const reducerFunction = (
       return { ...state, pinnedClient: action.payload };
     case "OFFER_ANSWER_VISIBLE":
       return { ...state, offerAnswerVisibile: action.payload };
+    case "SET_EMAIL":
+      return { ...state, email: action.payload };
     default:
       return state;
   }

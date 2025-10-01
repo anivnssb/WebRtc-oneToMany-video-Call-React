@@ -1,5 +1,6 @@
 import type { Socket } from "socket.io-client";
 import type { ClientToServerEvents, ServerToClientEvents } from "../types";
+import { useRef } from "react";
 
 interface OfferAndAnswerProps {
   hostORClient: string;
@@ -23,118 +24,32 @@ const OfferAndAnswer = ({
   offerAnswerVisibile,
   socket,
 }: OfferAndAnswerProps) => {
-  const copyText = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
+  const inputRef = useRef<HTMLInputElement>(null);
   return (
     <div
       className={`offer-and-answer-container ${
         offerAnswerVisibile ? "offer-answer-expanded" : ""
       }`}
     >
-      {/* OFFER */}
       <div className="offer-answer">
-        {offerAnswerVisibile ? <h3>Offer</h3> : ""}
-        <textarea
-          value={
-            offer[offer.length - 1]
-              ? JSON.stringify(offer[offer.length - 1])
-              : ""
-          }
-          onChange={(e) => {
-            dispatch({
-              type: "SET_OFFER",
-              payload: [...offer, e.target.value],
-            });
-          }}
-          rows={10}
-          cols={50}
-        />
-        {hostORClient === "host" && offerAnswerVisibile ? (
-          <div className="connect-buttons-container">
-            <button
-              className="button-two disable-text-selection"
-              onClick={startCall}
-            >
-              Start Call{" "}
-            </button>
-            <button
-              className="button-two disable-text-selection"
-              onClick={() => {
-                copyText(JSON.stringify(offer[offer.length - 1]));
-                socket.emit("sendHostOffer", {
-                  email: "anvinssb@gmail.com",
-                  offer: JSON.stringify(offer[offer.length - 1]),
-                });
-              }}
-            >
-              Copy Offer{" "}
-            </button>
-          </div>
-        ) : offerAnswerVisibile ? (
-          <div className="connect-buttons-container">
-            <button
-              className="button-two disable-text-selection"
-              onClick={() => answerCall()}
-            >
-              Answer Call{" "}
-            </button>
-          </div>
-        ) : (
-          ""
-        )}
-      </div>
-      <div className="offer-answer">
-        {offerAnswerVisibile ? <h3>Answer</h3> : ""}
-        <textarea
-          value={
-            answer[answer.length - 1]
-              ? JSON.stringify(answer[answer.length - 1])
-              : ""
-          }
-          onChange={(e) => {
-            if (answer.length === 1) {
-              dispatch({
-                type: "SET_ANSWER",
-                payload: [...answer, e.target.value],
-              });
-            } else {
-              const ans = [...answer];
-              ans.pop();
-              ans.push(e.target.value);
-              dispatch({ type: "SET_ANSWER", payload: ans });
-            }
-          }}
-          rows={10}
-          cols={50}
-        />
-
+        <h2>Invitation</h2>
+        <input type="text" ref={inputRef} />
         <div className="connect-buttons-container">
-          {hostORClient === "host" && offerAnswerVisibile ? (
-            <button
-              className="button-two  disable-text-selection"
-              onClick={() => {
-                onAnswer(JSON.parse(answer[answer.length - 1]));
-                console.log(JSON.parse(answer[answer.length - 1]));
-              }}
-            >
-              Connect{" "}
-            </button>
-          ) : (
-            ""
-          )}
-          {hostORClient === "client" && offerAnswerVisibile ? (
-            <button
-              className="button-two disable-text-selection"
-              onClick={() =>
-                copyText(JSON.stringify(answer[answer.length - 1]))
+          <button
+            className="button-two disable-text-selection"
+            onClick={() => {
+              if (inputRef.current?.value) {
+                dispatch({
+                  type: "SET_EMAIL",
+                  payload: inputRef.current?.value,
+                });
+                hostORClient === "host" && startCall();
+                hostORClient === "client" && answerCall();
               }
-            >
-              Copy Answer{" "}
-            </button>
-          ) : (
-            ""
-          )}
+            }}
+          >
+            {hostORClient === "host" ? "Invite" : "Join"}
+          </button>
         </div>
       </div>
     </div>

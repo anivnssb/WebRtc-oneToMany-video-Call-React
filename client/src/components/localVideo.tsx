@@ -1,4 +1,4 @@
-import { forwardRef, type RefObject } from "react";
+import React from "react";
 import { ImPhoneHangUp } from "react-icons/im";
 import { useState } from "react";
 import useObserveWidth from "../hooks/useObserveWidth";
@@ -10,32 +10,35 @@ import {
 } from "react-icons/fa";
 
 interface LocalVideoProps {
-  localVideoRef: RefObject<HTMLVideoElement | null>;
   inCall: boolean;
   hangup: () => void;
 }
 
-const LocalVideo = forwardRef(
-  ({ localVideoRef, inCall, hangup }: LocalVideoProps) => {
+const LocalVideo = React.forwardRef<HTMLVideoElement, LocalVideoProps>(
+  ({ inCall, hangup }, localVideoRef) => {
     const [overlayBtnContainerRef, width] = useObserveWidth();
     const [audioEnabled, setAudioEnabled] = useState(false);
     const [videoEnabled, setVideoEnabled] = useState(false);
 
     const enableDisableAudio = (bool: boolean) => {
-      const stream = localVideoRef?.current?.srcObject as MediaStream | null;
-      const audioTrack = stream?.getAudioTracks()[0];
-      if (audioTrack) {
-        audioTrack.enabled = bool;
+      if (localVideoRef && "current" in localVideoRef) {
+        const stream = localVideoRef?.current?.srcObject as MediaStream | null;
+        const audioTrack = stream?.getAudioTracks()[0];
+        if (audioTrack) {
+          audioTrack.enabled = bool;
+        }
+        setAudioEnabled(bool);
       }
-      setAudioEnabled(bool);
     };
     const enableDisableVideo = (bool: boolean) => {
-      const stream = localVideoRef.current?.srcObject as MediaStream | null;
-      const videoTrack = stream?.getVideoTracks()[0];
-      if (videoTrack) {
-        videoTrack.enabled = bool;
+      if (localVideoRef && "current" in localVideoRef) {
+        const stream = localVideoRef?.current?.srcObject as MediaStream | null;
+        const videoTrack = stream?.getVideoTracks()[0];
+        if (videoTrack) {
+          videoTrack.enabled = bool;
+        }
+        setVideoEnabled(bool);
       }
-      setVideoEnabled(bool);
     };
     return (
       <div className="local-video-container">

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useReducer } from "react";
+import { useEffect, useRef, useReducer, useCallback } from "react";
 import LocalVideo from "./localVideo";
 import OfferAndAnswer from "./OfferAndAnswer";
 import Navbar from "./Navbar";
@@ -6,25 +6,15 @@ import { initialState, reducerFunction } from "../state/stateAndReducer";
 import RemoteVideo from "./remoteVideo";
 import PinnedVideo from "./PinnedVideo";
 import MeetingEnded from "./MeetingEnded";
-import { io, Socket } from "socket.io-client";
-import type { ClientToServerEvents, ServerToClientEvents } from "../types";
+import { Socket } from "socket.io-client";
 interface WebRTCProps {
   setHostORClient: React.Dispatch<React.SetStateAction<string>>;
   hostORClient: string;
+  socket: Socket;
 }
-const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
-  const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
-    "http://localhost:3000"
-  );
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Successfully connected to Socket.IO server!");
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Disconnected from Socket.IO server.");
-    });
-  }, []);
+const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
+  const offerSentRef = useRef<boolean>(false);
+  const answerSentRef = useRef<boolean>(false);
   interface ExtendedRTCPeerConnection extends RTCPeerConnection {
     pcid: number;
   }
@@ -38,29 +28,58 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
     pinnedClient,
     offerAnswerVisibile,
     isMeetingEnded,
+    email,
   } = state;
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const peerConnection = useRef<ExtendedRTCPeerConnection[]>([]);
   const remoteStreamsRef = useRef<MediaStream[] | null>(null);
-  const answerRef = useRef<string[]>([]);
-  const offerRef = useRef<string[]>([]);
   const pinnedClientRef = useRef<string>(null);
 
   useEffect(() => {
     remoteStreamsRef.current = remoteStreams.concat([]);
   }, [remoteStreams]);
   useEffect(() => {
-    answerRef.current = answer.concat([]);
-  }, [answer]);
-  useEffect(() => {
-    offerRef.current = offer.concat([]);
-  }, [offer]);
-  useEffect(() => {
     pinnedClientRef.current = pinnedClient;
   }, [pinnedClient]);
-
+  useEffect(() => {
+    if (offer && hostORClient === "host" && !offerSentRef.current) {
+      offerSentRef.current = true;
+      socket.emit("sendHostOffer", {
+        offer: JSON.stringify(offer),
+        email: email,
+      });
+      console.log("sending offer");
+    }
+  }, [offer]);
+  useEffect(() => {
+    if (answer && hostORClient === "client" && !answerSentRef.current) {
+      answerSentRef.current = true;
+      socket.emit("sendClientAnswer", {
+        answer: JSON.stringify(answer),
+        email: email,
+      });
+      console.log("sending answer");
+    }
+  }, [answer]);
   useEffect(() => {
     createPeerConnection();
+    socket.on("connect", () => {
+      console.log("Successfully connected to Socket.IO server!");
+    });
+
+    socket.on("offer", (data) => {
+      hostORClient === "client" && answerCall(data.offer);
+    });
+
+    socket.on("answer", (data) => {
+      if (hostORClient === "host") {
+        console.log("answer received", data.answer);
+        onAnswer(data.answer);
+      }
+    });
+    socket.on("disconnect", () => {
+      console.log("Disconnected from Socket.IO server.");
+    });
   }, []);
 
   function registerPeerConnectionListeners(
@@ -95,13 +114,10 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
             );
             if (index === -1) return;
             peeerConnection.close();
-            const updatedOffers = [...offerRef.current];
-            updatedOffers.splice(index, 1);
-            dispatch({ type: "SET_OFFER", payload: updatedOffers });
 
-            const updatedAnswers = [...answerRef.current];
-            updatedAnswers.splice(index, 1);
-            dispatch({ type: "SET_ANSWER", payload: updatedAnswers });
+            dispatch({ type: "SET_OFFER", payload: "" });
+
+            dispatch({ type: "SET_ANSWER", payload: "" });
 
             const updatedStreams = remoteStreamsRef.current
               ? [...remoteStreamsRef.current]
@@ -222,20 +238,16 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
         if (peerType === "caller") {
           dispatch({
             type: "SET_OFFER",
-            payload: [
-              ...offer,
+            payload:
               peerConnection.current[peerConnection.current.length - 1]
                 ?.localDescription,
-            ],
           });
         } else if (peerType === "receiver") {
           dispatch({
             type: "SET_ANSWER",
-            payload: [
-              ...answer,
+            payload:
               peerConnection.current[peerConnection.current.length - 1]
                 ?.localDescription,
-            ],
           });
         } else {
           throw new Error(
@@ -246,13 +258,13 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
     };
   };
 
-  const hangupHost = async () => {
+  const hangupHost = useCallback(async () => {
     for (const pc of peerConnection.current) {
       pc.close();
     }
     dispatch({ type: "SET_IN_CALL", payload: false });
-    dispatch({ type: "SET_OFFER", payload: [] });
-    dispatch({ type: "SET_ANSWER", payload: [] });
+    dispatch({ type: "SET_OFFER", payload: "" });
+    dispatch({ type: "SET_ANSWER", payload: "" });
     dispatch({ type: "SET_REMOTE_STREAMS", payload: [] });
     dispatch({ type: "SET_PINNED_CLIENT", payload: null });
     dispatch({ type: "SET_IS_MEETING_ENDED", payload: true });
@@ -264,12 +276,12 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
       }
     }
     peerConnection.current = [];
-  };
-  const hangupClient = async () => {
+  }, []);
+  const hangupClient = useCallback(async () => {
     peerConnection.current[0].close();
     dispatch({ type: "SET_IN_CALL", payload: false });
-    dispatch({ type: "SET_OFFER", payload: [] });
-    dispatch({ type: "SET_ANSWER", payload: [] });
+    dispatch({ type: "SET_OFFER", payload: "" });
+    dispatch({ type: "SET_ANSWER", payload: "" });
     dispatch({ type: "SET_REMOTE_STREAMS", payload: [] });
     dispatch({ type: "SET_PINNED_CLIENT", payload: null });
     dispatch({ type: "SET_IS_MEETING_ENDED", payload: true });
@@ -281,8 +293,8 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
       }
     }
     peerConnection.current = [];
-  };
-  const hangupRemote = async (index: number) => {
+  }, []);
+  const hangupRemote = useCallback(async (index: number) => {
     if (!peerConnection.current[index]) {
       throw new Error("Peer connection is not available");
     }
@@ -310,9 +322,10 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
     peerConnectionCopy.splice(index, 1);
     peerConnection.current = peerConnectionCopy;
     console.log("peer connection for Remote closed");
-  };
+  }, []);
 
-  const startCall = async () => {
+  const startCall = useCallback(async () => {
+    offerSentRef.current = false;
     if (!peerConnection.current[peerConnection.current.length - 1]) {
       throw new Error("Peer connection is not available");
     }
@@ -325,32 +338,40 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
     await peerConnection.current[
       peerConnection.current.length - 1
     ].setLocalDescription(offerDescription);
+  }, []);
+
+  const onAnswer = async (answer: string) => {
+    try {
+      console.log(answer);
+      const answerr: { sdp: string; type: RTCSdpType } = await JSON.parse(
+        answer
+      );
+      console.log(answerr);
+      if (!peerConnection.current[peerConnection.current.length - 1]) {
+        throw new Error("Peer connection is not available");
+      }
+
+      if (
+        peerConnection.current[peerConnection.current.length - 1]
+          .currentRemoteDescription
+      ) {
+        console.log("Remote description already set");
+        return;
+      }
+      const answerDescription = new RTCSessionDescription(answerr);
+      await peerConnection.current[
+        peerConnection.current.length - 1
+      ].setRemoteDescription(answerDescription);
+      dispatch({ type: "SET_IN_CALL", payload: true });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const onAnswer = async (answer: { sdp: string; type: RTCSdpType }) => {
-    if (!peerConnection.current[peerConnection.current.length - 1]) {
-      throw new Error("Peer connection is not available");
-    }
-
-    if (
-      peerConnection.current[peerConnection.current.length - 1]
-        .currentRemoteDescription
-    ) {
-      console.log("Remote description already set");
-      return;
-    }
-
-    const answerDescription = new RTCSessionDescription(answer);
-    await peerConnection.current[
-      peerConnection.current.length - 1
-    ].setRemoteDescription(answerDescription);
-    dispatch({ type: "SET_IN_CALL", payload: true });
-  };
-
-  const answerCall = async () => {
+  const answerCall = async (offer: string) => {
     try {
       generateIceCandidate("receiver");
-      const offerr = await JSON.parse(offer[offer.length - 1]);
+      const offerr = await JSON.parse(offer);
       const offerDescription = new RTCSessionDescription(offerr);
       await peerConnection.current[
         peerConnection.current.length - 1
@@ -406,11 +427,11 @@ const WebRTC = ({ hostORClient, setHostORClient }: WebRTCProps) => {
           >
             <LocalVideo
               {...{
-                localVideoRef,
                 inCall,
                 hangup: hostORClient === "host" ? hangupHost : hangupClient,
                 pinnedClient,
               }}
+              ref={localVideoRef}
               key="localvdo-123"
             />
             {remoteStreams.length
