@@ -21,7 +21,6 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
   const [state, dispatch] = useReducer(reducerFunction, initialState);
   const {
     inCall,
-    waitingForPeer,
     remoteStreams,
     offer,
     answer,
