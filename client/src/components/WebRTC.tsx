@@ -52,6 +52,11 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
     }
   }, [offer]);
   useEffect(() => {
+    if (inCall) {
+      dispatch({ type: "OFFER_ANSWER_VISIBLE", payload: false });
+    }
+  }, [inCall]);
+  useEffect(() => {
     if (answer && hostORClient === "client" && !answerSentRef.current) {
       answerSentRef.current = true;
       socket.emit("sendClientAnswer", {
