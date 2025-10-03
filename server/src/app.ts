@@ -1,9 +1,10 @@
 import { Server } from "socket.io";
 import { ClientToServerEvents, ServerToClientEvents } from "./types.js";
+import "dotenv/config";
 
 const io = new Server<ClientToServerEvents, ServerToClientEvents>({
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_ORIGIN,
   },
 });
 
