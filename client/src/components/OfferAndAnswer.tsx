@@ -1,28 +1,18 @@
-import type { Socket } from "socket.io-client";
-import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 import { useRef } from "react";
 
 interface OfferAndAnswerProps {
   hostORClient: string;
   dispatch: React.Dispatch<any>;
-  answer: string[];
-  offer: [];
   startCall: () => Promise<void>;
-  answerCall: () => Promise<void>;
-  onAnswer: (answer: { sdp: string; type: RTCSdpType }) => Promise<void>;
+  // answerCall: () => Promise<void>;
   offerAnswerVisibile: string;
-  socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 }
 const OfferAndAnswer = ({
-  offer,
   hostORClient,
   startCall,
-  answerCall,
-  answer,
+  // answerCall,
   dispatch,
-  onAnswer,
   offerAnswerVisibile,
-  socket,
 }: OfferAndAnswerProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   return (
@@ -44,7 +34,7 @@ const OfferAndAnswer = ({
                   payload: inputRef.current?.value,
                 });
                 hostORClient === "host" && startCall();
-                hostORClient === "client" && answerCall();
+                // hostORClient === "client" && answerCall();
               }
             }}
           >

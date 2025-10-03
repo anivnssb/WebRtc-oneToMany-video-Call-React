@@ -7,7 +7,7 @@ const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   import.meta.env.VITE_SERVER_URL as string
 );
 createRoot(document.getElementById("root") as Container).render(
-  // <StrictMode>
-  <App socket={socket} />
-  // </StrictMode>
+  <StrictMode>
+    <App socket={socket} />
+  </StrictMode>
 );

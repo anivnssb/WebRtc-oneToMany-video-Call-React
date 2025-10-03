@@ -410,13 +410,9 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
           {...{
             hostORClient,
             startCall,
-            answerCall,
-            onAnswer,
-            offer,
-            answer,
+            // answerCall,
             dispatch,
             offerAnswerVisibile,
-            socket,
           }}
         />
         <div className="pinned-state">
