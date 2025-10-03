@@ -43,6 +43,9 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
     pinnedClientRef.current = pinnedClient;
   }, [pinnedClient]);
   useEffect(() => {
+    console.log(offerSentRef.current);
+    console.log(room);
+    console.log(offer);
     if (offer && hostORClient === "host" && !offerSentRef.current) {
       offerSentRef.current = true;
       socket.emit("sendHostOffer", {
@@ -91,6 +94,8 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
       console.log("Disconnected from Socket.IO server.");
     });
   }, []);
+
+  const resetOfferSentRef = () => (offerSentRef.current = false);
 
   function registerPeerConnectionListeners(
     peeerConnection: RTCPeerConnection,
@@ -307,7 +312,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
     }
     peerConnection.current = [];
   }, []);
-  const hangupRemote = useCallback(async (index: number) => {
+  const hangupRemote = async (index: number) => {
     if (!peerConnection.current[index]) {
       throw new Error("Peer connection is not available");
     }
@@ -316,13 +321,8 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
       return;
     }
     peerConnection.current[index].close();
-    const offerCopy = [...offer];
-    offerCopy.splice(index, 1);
-    dispatch({ type: "SET_OFFER", payload: offerCopy });
-
-    const answerCopy = [...answer];
-    answerCopy.splice(index, 1);
-    dispatch({ type: "SET_ANSWER", payload: answerCopy });
+    dispatch({ type: "SET_OFFER", payload: "" });
+    dispatch({ type: "SET_ANSWER", payload: "" });
 
     const updatedRemoteStreams = [...remoteStreams];
     const removedStream = updatedRemoteStreams.splice(index, 1);
@@ -335,7 +335,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
     peerConnectionCopy.splice(index, 1);
     peerConnection.current = peerConnectionCopy;
     console.log("peer connection for Remote closed");
-  }, []);
+  };
 
   const startCall = useCallback(async () => {
     offerSentRef.current = false;
@@ -415,6 +415,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
           createNewPeerConnectionForRemote,
           offerAnswerVisibile,
           hangup: hostORClient === "host" ? hangupHost : hangupClient,
+          resetOfferSentRef,
         }}
       />
 

@@ -26,7 +26,7 @@ const OfferAndAnswer = ({
       }`}
     >
       <div className="offer-answer">
-        <h2>Create Room</h2>
+        <h2>{`${hostORClient === "host" ? "Create" : "Join "}`} Room</h2>
         <input
           type="text"
           ref={inputRef}
@@ -44,7 +44,6 @@ const OfferAndAnswer = ({
           <button
             className="button-two disable-text-selection"
             onClick={() => {
-              console.log(room);
               if (inputRef.current?.value) {
                 hostORClient === "host" && startCall();
                 if (

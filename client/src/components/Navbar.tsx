@@ -12,6 +12,7 @@ interface NavbarProps {
   offer: string;
   offerAnswerVisibile: boolean;
   hangup: () => void;
+  resetOfferSentRef: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
@@ -25,6 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({
   offer,
   offerAnswerVisibile,
   hangup,
+  resetOfferSentRef,
 }) => {
   return (
     <div className="navbar">
@@ -47,16 +49,15 @@ const Navbar: React.FC<NavbarProps> = ({
               className="add-new-client"
               style={{ width: "fit-content", height: "fit-content" }}
               onClick={() => {
-                if (offer.length !== peerConnection.length) {
-                  return;
-                }
                 dispatch({
                   type: "SET_ANSWER",
-                  payload: [
-                    ...answer,
-                    "clear this text and paste the answer from the new clent",
-                  ],
+                  payload: "",
                 });
+                dispatch({
+                  type: "SET_OFFER",
+                  payload: "",
+                });
+                resetOfferSentRef();
                 createNewPeerConnectionForRemote();
               }}
             >
