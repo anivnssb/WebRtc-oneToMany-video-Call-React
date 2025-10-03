@@ -1,4 +1,6 @@
 import { useRef } from "react";
+import type { Socket } from "socket.io-client";
+import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 
 interface OfferAndAnswerProps {
   hostORClient: string;
@@ -8,6 +10,7 @@ interface OfferAndAnswerProps {
   offerAnswerVisibile: boolean;
   offerReceivedFromHost: string;
   room: string;
+  socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 }
 const OfferAndAnswer = ({
   hostORClient,
@@ -17,6 +20,7 @@ const OfferAndAnswer = ({
   offerAnswerVisibile,
   offerReceivedFromHost,
   room,
+  socket,
 }: OfferAndAnswerProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   return (
@@ -26,15 +30,17 @@ const OfferAndAnswer = ({
       }`}
     >
       <div className="offer-answer">
-        <h2>{`${hostORClient === "host" ? "Create" : "Join "}`} Room</h2>
+        <h2>{`${hostORClient === "host" ? "Client" : "Your"}`} Email</h2>
         <input
           type="text"
           ref={inputRef}
-          placeholder="Enter Room Number"
+          placeholder={`${
+            hostORClient === "host" ? "Client" : "Your"
+          } Email Id`}
           onChange={(e) => {
             if (hostORClient === "host") {
               dispatch({
-                type: "SET_ROOM",
+                type: "SET_EMAIL",
                 payload: e.target.value,
               });
             }
@@ -45,12 +51,18 @@ const OfferAndAnswer = ({
             className="button-two disable-text-selection"
             onClick={() => {
               if (inputRef.current?.value) {
-                hostORClient === "host" && startCall();
-                if (
-                  hostORClient === "client" &&
-                  room === inputRef.current?.value
-                ) {
-                  answerCall(offerReceivedFromHost);
+                if (hostORClient === "host") {
+                  startCall();
+                  return;
+                }
+                if (hostORClient === "client") {
+                  socket.emit("requestMeetingData", {
+                    email: inputRef.current?.value,
+                  });
+                  socket.on("sendMeetingData", (data) => {
+                    console.log("meeting data received from server", data);
+                    answerCall(data.offer);
+                  });
                 }
               }
             }}

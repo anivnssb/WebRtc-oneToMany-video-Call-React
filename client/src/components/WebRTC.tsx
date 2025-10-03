@@ -7,10 +7,11 @@ import RemoteVideo from "./remoteVideo";
 import PinnedVideo from "./PinnedVideo";
 import MeetingEnded from "./MeetingEnded";
 import { Socket } from "socket.io-client";
+import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 interface WebRTCProps {
   setHostORClient: React.Dispatch<React.SetStateAction<string>>;
   hostORClient: string;
-  socket: Socket;
+  socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 }
 const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
   const offerSentRef = useRef<boolean>(false);
@@ -27,7 +28,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
     pinnedClient,
     offerAnswerVisibile,
     isMeetingEnded,
-    room,
+    email,
     offerReceivedFromHost,
   } = state;
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -43,13 +44,13 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
   }, [pinnedClient]);
   useEffect(() => {
     console.log(offerSentRef.current);
-    console.log(room);
+    console.log(email);
     console.log(offer);
     if (offer && hostORClient === "host" && !offerSentRef.current) {
       offerSentRef.current = true;
       socket.emit("sendHostOffer", {
         offer: JSON.stringify(offer),
-        room: room,
+        email: email,
       });
     }
   }, [offer]);
@@ -63,7 +64,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
       answerSentRef.current = true;
       socket.emit("sendClientAnswer", {
         answer: JSON.stringify(answer),
-        room: room,
+        email: email,
       });
     }
   }, [answer]);
@@ -73,25 +74,27 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
       console.log("Successfully connected to Socket.IO server!");
     });
 
-    socket.on("offer", (data) => {
-      if (hostORClient === "client") {
-        dispatch({
-          type: "SET_ROOM",
-          payload: data.room,
-        });
-      }
-      dispatch({ type: "SET_OFFER_RECEIVED_FROM_HOST", payload: data.offer });
-    });
+    // socket.on("offer", (data) => {
+    //   if (hostORClient === "client") {
+    //     dispatch({
+    //       type: "SET_EMAIL",
+    //       payload: data.email,
+    //     });
+    //   }
+    //   dispatch({ type: "SET_OFFER_RECEIVED_FROM_HOST", payload: data.offer });
+    // });
 
     socket.on("answer", (data) => {
       if (hostORClient === "host") {
-        console.log("answer received", data.answer);
         onAnswer(data.answer);
       }
     });
     socket.on("disconnect", () => {
       console.log("Disconnected from Socket.IO server.");
     });
+    return () => {
+      if (hostORClient === "host") socket.emit("clearMeetingData");
+    };
   }, []);
 
   const resetOfferSentRef = () => (offerSentRef.current = false);
@@ -282,7 +285,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
     dispatch({ type: "SET_REMOTE_STREAMS", payload: [] });
     dispatch({ type: "SET_PINNED_CLIENT", payload: null });
     dispatch({ type: "SET_IS_MEETING_ENDED", payload: true });
-    dispatch({ type: "SET_ROOM", payload: "" });
+    dispatch({ type: "SET_EMAIL", payload: "" });
     if (localVideoRef.current) {
       const stream = localVideoRef.current.srcObject as MediaStream | null;
       if (stream) {
@@ -291,6 +294,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
       }
     }
     peerConnection.current = [];
+    socket.emit("clearMeetingData");
   }, []);
   const hangupClient = useCallback(async () => {
     peerConnection.current[0].close();
@@ -300,7 +304,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
     dispatch({ type: "SET_REMOTE_STREAMS", payload: [] });
     dispatch({ type: "SET_PINNED_CLIENT", payload: null });
     dispatch({ type: "SET_IS_MEETING_ENDED", payload: true });
-    dispatch({ type: "SET_ROOM", payload: "" });
+    dispatch({ type: "SET_EMAIL", payload: "" });
     dispatch({ type: "SET_OFFER_RECEIVED_FROM_HOST", payload: "" });
     if (localVideoRef.current) {
       const stream = localVideoRef.current.srcObject as MediaStream | null;
@@ -423,7 +427,8 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
             dispatch,
             offerAnswerVisibile,
             offerReceivedFromHost,
-            room,
+            email,
+            socket,
           }}
         />
         <div className="pinned-state">
