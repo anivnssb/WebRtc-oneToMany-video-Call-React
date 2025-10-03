@@ -405,13 +405,9 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
       <Navbar
         {...{
           setHostORClient,
-          waitingForPeer,
-          peerConnection: peerConnection.current,
-          offer,
           hostORClient,
           inCall,
           dispatch,
-          answer,
           createNewPeerConnectionForRemote,
           offerAnswerVisibile,
           hangup: hostORClient === "host" ? hangupHost : hangupClient,
