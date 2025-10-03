@@ -4,7 +4,7 @@ import "dotenv/config";
 
 const io = new Server<ClientToServerEvents, ServerToClientEvents>({
   cors: {
-    origin: "https://web-rtc-one-to-many-video-call-reac.vercel.app/",
+    origin: "https://web-rtc-one-to-many-video-call-reac.vercel.app",
   },
 });
 
