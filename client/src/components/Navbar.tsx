@@ -6,11 +6,11 @@ interface NavbarProps {
   hostORClient: string;
   inCall: boolean;
   dispatch: React.Dispatch<any>;
-  answer: string[];
+  answer: string;
   createNewPeerConnectionForRemote: () => Promise<void>;
   peerConnection: RTCPeerConnection[];
-  offer: [];
-  offerAnswerVisibile: string;
+  offer: string;
+  offerAnswerVisibile: boolean;
   hangup: () => void;
 }
 

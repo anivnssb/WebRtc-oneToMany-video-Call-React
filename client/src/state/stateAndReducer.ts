@@ -8,17 +8,19 @@ interface InitialStateInterface {
   pinnedClient: string | null;
   offerAnswerVisibile: boolean;
   room: string;
+  offerReceivedFromHost: string;
 }
 export const initialState = {
   inCall: false,
-  isMeetingEnded: false,
-  waitingForPeer: false,
-  remoteStreams: [],
   offer: "",
   answer: "",
+  remoteStreams: [],
   pinnedClient: null,
+  isMeetingEnded: false,
+  waitingForPeer: false,
   offerAnswerVisibile: true,
   room: "",
+  offerReceivedFromHost: "",
 };
 
 export const reducerFunction = (
@@ -46,6 +48,8 @@ export const reducerFunction = (
       return { ...state, offerAnswerVisibile: action.payload };
     case "SET_ROOM":
       return { ...state, room: action.payload };
+    case "SET_OFFER_RECEIVED_FROM_HOST":
+      return { ...state, offerReceivedFromHost: action.payload };
     default:
       return state;
   }
