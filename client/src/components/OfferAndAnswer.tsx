@@ -8,8 +8,6 @@ interface OfferAndAnswerProps {
   startCall: () => Promise<void>;
   answerCall: (offer: string) => Promise<void>;
   offerAnswerVisibile: boolean;
-  offerReceivedFromHost: string;
-  room: string;
   socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 }
 const OfferAndAnswer = ({
@@ -18,8 +16,6 @@ const OfferAndAnswer = ({
   answerCall,
   dispatch,
   offerAnswerVisibile,
-  offerReceivedFromHost,
-  room,
   socket,
 }: OfferAndAnswerProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -60,8 +56,9 @@ const OfferAndAnswer = ({
                     email: inputRef.current?.value,
                   });
                   socket.on("sendMeetingData", (data) => {
-                    console.log("meeting data received from server", data);
-                    answerCall(data.offer);
+                    if (data.email === inputRef.current?.value) {
+                      answerCall(data.offer);
+                    }
                   });
                 }
               }

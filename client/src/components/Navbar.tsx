@@ -53,6 +53,10 @@ const Navbar: React.FC<NavbarProps> = ({
                 });
                 resetOfferSentRef();
                 createNewPeerConnectionForRemote();
+                dispatch({
+                  type: "OFFER_ANSWER_VISIBLE",
+                  payload: true,
+                });
               }}
             >
               Add new client{" "}

@@ -8,7 +8,6 @@ interface InitialStateInterface {
   pinnedClient: string | null;
   offerAnswerVisibile: boolean;
   email: string;
-  offerReceivedFromHost: string;
 }
 export const initialState = {
   inCall: false,
@@ -20,7 +19,6 @@ export const initialState = {
   waitingForPeer: false,
   offerAnswerVisibile: true,
   email: "",
-  offerReceivedFromHost: "",
 };
 
 export const reducerFunction = (
@@ -48,8 +46,6 @@ export const reducerFunction = (
       return { ...state, offerAnswerVisibile: action.payload };
     case "SET_EMAIL":
       return { ...state, email: action.payload };
-    case "SET_OFFER_RECEIVED_FROM_HOST":
-      return { ...state, offerReceivedFromHost: action.payload };
     default:
       return state;
   }
