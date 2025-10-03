@@ -8,11 +8,11 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>({
   },
 });
 
-const sendHostOfferToClient = (data: { email: string; offer: string }) => {
+const sendHostOfferToClient = (data: { room: string; offer: string }) => {
   console.log("sending offer");
   io.emit("offer", data);
 };
-const sendClientAnswerToHost = (data: { email: string; answer: string }) => {
+const sendClientAnswerToHost = (data: { room: string; answer: string }) => {
   console.log("sending answer");
   io.emit("answer", data);
 };

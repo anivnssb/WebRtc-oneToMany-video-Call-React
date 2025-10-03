@@ -7,7 +7,7 @@ interface InitialStateInterface {
   answer: string;
   pinnedClient: string | null;
   offerAnswerVisibile: boolean;
-  email: string;
+  room: string;
 }
 export const initialState = {
   inCall: false,
@@ -18,7 +18,7 @@ export const initialState = {
   answer: "",
   pinnedClient: null,
   offerAnswerVisibile: true,
-  email: "",
+  room: "",
 };
 
 export const reducerFunction = (
@@ -44,8 +44,8 @@ export const reducerFunction = (
       return { ...state, pinnedClient: action.payload };
     case "OFFER_ANSWER_VISIBLE":
       return { ...state, offerAnswerVisibile: action.payload };
-    case "SET_EMAIL":
-      return { ...state, email: action.payload };
+    case "SET_ROOM":
+      return { ...state, room: action.payload };
     default:
       return state;
   }

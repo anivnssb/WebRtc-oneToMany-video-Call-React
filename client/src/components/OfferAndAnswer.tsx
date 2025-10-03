@@ -22,15 +22,15 @@ const OfferAndAnswer = ({
       }`}
     >
       <div className="offer-answer">
-        <h2>Invitation</h2>
-        <input type="text" ref={inputRef} />
+        <h2>Create Room</h2>
+        <input type="text" ref={inputRef} placeholder="Enter Room Number" />
         <div className="connect-buttons-container">
           <button
             className="button-two disable-text-selection"
             onClick={() => {
               if (inputRef.current?.value) {
                 dispatch({
-                  type: "SET_EMAIL",
+                  type: "SET_ROOM",
                   payload: inputRef.current?.value,
                 });
                 hostORClient === "host" && startCall();
@@ -38,7 +38,7 @@ const OfferAndAnswer = ({
               }
             }}
           >
-            {hostORClient === "host" ? "Invite" : "Join"}
+            {hostORClient === "host" ? "Start Meeting" : "Join"}
           </button>
         </div>
       </div>

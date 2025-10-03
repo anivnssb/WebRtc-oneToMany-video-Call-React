@@ -28,7 +28,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
     pinnedClient,
     offerAnswerVisibile,
     isMeetingEnded,
-    email,
+    room,
   } = state;
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const peerConnection = useRef<ExtendedRTCPeerConnection[]>([]);
@@ -46,7 +46,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
       offerSentRef.current = true;
       socket.emit("sendHostOffer", {
         offer: JSON.stringify(offer),
-        email: email,
+        room: room,
       });
       console.log("sending offer");
     }
@@ -56,7 +56,7 @@ const WebRTC = ({ hostORClient, setHostORClient, socket }: WebRTCProps) => {
       answerSentRef.current = true;
       socket.emit("sendClientAnswer", {
         answer: JSON.stringify(answer),
-        email: email,
+        room: room,
       });
       console.log("sending answer");
     }
