@@ -9,13 +9,14 @@ import { ImPhoneHangUp } from "react-icons/im";
 import useObserveWidth from "../hooks/useObserveWidth";
 import { FaThumbtackSlash } from "react-icons/fa6";
 import SpinnerIcon from "./icons/SpinnerIcon";
+import { updatePinnedClient } from "../state/appEventSlice";
+import { useAppDispatch } from "../state/hook";
 
 interface RemoteVideoProps {
   index: number;
   stream: MediaStream;
   hangupRemote: (index: number) => Promise<void>;
   hostORClient: string;
-  dispatch: React.Dispatch<any>;
   pinnedClient: string | null;
   inCall: boolean;
   remoteStreams: MediaStream[];
@@ -26,11 +27,11 @@ const RemoteVideo = ({
   stream,
   hangupRemote,
   hostORClient,
-  dispatch,
   pinnedClient,
   inCall,
   remoteStreams,
 }: RemoteVideoProps) => {
+  const dispatch = useAppDispatch();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [overlayBtnContainerRef, width] = useObserveWidth();
   const [mute, setMute] = useState(true);
@@ -95,10 +96,12 @@ const RemoteVideo = ({
               )}
               <button
                 onClick={() =>
-                  dispatch({
-                    type: "SET_PINNED_CLIENT",
-                    payload: pinnedClient === stream?.id ? null : stream?.id,
-                  })
+                  dispatch(
+                    updatePinnedClient({
+                      pinnedClient:
+                        pinnedClient === stream?.id ? null : stream?.id,
+                    })
+                  )
                 }
                 className="pin-button"
                 style={{ padding: width * 0.05 }}

@@ -1,22 +1,17 @@
-import { useState } from "react";
 import WebRTC from "./components/WebRTC";
 import Landing from "./components/Landing";
 import "./app.css";
 import { type Socket } from "socket.io-client";
+import { useAppStateSelector } from "./state/hook";
 const App = ({ socket }: { socket: Socket }) => {
-  const [hostORClient, setHostORClient] = useState("");
+  const hostORClient = useAppStateSelector(
+    (state) => state.appEvents.hostORClient
+  );
+
   if (hostORClient === "") {
-    return (
-      <Landing hostORClient={hostORClient} setHostORClient={setHostORClient} />
-    );
+    return <Landing />;
   } else {
-    return (
-      <WebRTC
-        hostORClient={hostORClient}
-        setHostORClient={setHostORClient}
-        socket={socket}
-      />
-    );
+    return <WebRTC socket={socket} />;
   }
 };
 

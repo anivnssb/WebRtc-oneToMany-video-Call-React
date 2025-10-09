@@ -1,34 +1,37 @@
 import { FaAnglesDown } from "react-icons/fa6";
 import BackArrowIcon from "./icons/BackArrowIcon";
 import type React from "react";
+import { useAppDispatch } from "../state/hook";
+import {
+  updateHostORClient,
+  updateOfferAnswerVisibile,
+} from "../state/appEventSlice";
+import { updateAnswer, updateOffer } from "../state/meetingDataSlice";
 interface NavbarProps {
-  setHostORClient: React.Dispatch<React.SetStateAction<string>>;
   hostORClient: string;
   inCall: boolean;
-  dispatch: React.Dispatch<any>;
   createNewPeerConnectionForRemote: () => Promise<void>;
   offerAnswerVisibile: boolean;
-  hangup: () => void;
+  hangup: (fromNavbar: boolean) => void;
   resetOfferSentRef: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
-  setHostORClient,
   hostORClient,
   inCall,
-  dispatch,
   createNewPeerConnectionForRemote,
   offerAnswerVisibile,
   hangup,
   resetOfferSentRef,
 }) => {
+  const dispatch = useAppDispatch();
   return (
     <div className="navbar">
       <button
         className="button back-arrow-button"
         onClick={() => {
-          hangup();
-          setHostORClient("");
+          hangup(true);
+          dispatch(updateHostORClient({ hostORClient: "" }));
         }}
       >
         {" "}
@@ -43,20 +46,13 @@ const Navbar: React.FC<NavbarProps> = ({
               className="add-new-client"
               style={{ width: "fit-content", height: "fit-content" }}
               onClick={() => {
-                dispatch({
-                  type: "SET_ANSWER",
-                  payload: "",
-                });
-                dispatch({
-                  type: "SET_OFFER",
-                  payload: "",
-                });
+                dispatch(updateOffer({ offer: "" }));
+                dispatch(updateAnswer({ answer: "" }));
                 resetOfferSentRef();
                 createNewPeerConnectionForRemote();
-                dispatch({
-                  type: "OFFER_ANSWER_VISIBLE",
-                  payload: true,
-                });
+                dispatch(
+                  updateOfferAnswerVisibile({ offerAnswerVisibile: true })
+                );
               }}
             >
               Add new client{" "}
@@ -69,12 +65,13 @@ const Navbar: React.FC<NavbarProps> = ({
             className={`offer-answer-expand-icon ${
               offerAnswerVisibile ? "roate-icon" : ""
             }`}
-            onClick={() =>
-              dispatch({
-                type: "OFFER_ANSWER_VISIBLE",
-                payload: !offerAnswerVisibile,
-              })
-            }
+            onClick={() => {
+              dispatch(
+                updateOfferAnswerVisibile({
+                  offerAnswerVisibile: !offerAnswerVisibile,
+                })
+              );
+            }}
           >
             <FaAnglesDown />
           </div>

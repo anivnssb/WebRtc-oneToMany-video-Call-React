@@ -1,25 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useObserveWidth from "../hooks/useObserveWidth";
 import { ImPhoneHangUp } from "react-icons/im";
 import { FaThumbtackSlash } from "react-icons/fa6";
 import { FaExpand, FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
+import { updatePinnedClient } from "../state/appEventSlice";
+import { useAppDispatch } from "../state/hook";
 
 interface PinnedVideoProps {
   hangupRemote: (index: number) => void;
   hostORClient: string;
-  dispatch: React.Dispatch<any>;
   stream: MediaStream;
   index: number;
   remoteStreams: MediaStream[];
 }
 const PinnedVideo = ({
   hangupRemote,
-  dispatch,
   hostORClient,
   stream,
   index,
   remoteStreams,
 }: PinnedVideoProps) => {
+  const dispatch = useAppDispatch();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [overlayBtnContainerRef, width] = useObserveWidth();
   const [mute, setMute] = useState(true);
@@ -67,10 +68,7 @@ const PinnedVideo = ({
                       ({ id }) => id === stream?.id
                     );
                     hangupRemote(index);
-                    dispatch({
-                      type: "SET_PINNED_CLIENT",
-                      payload: null,
-                    });
+                    dispatch(updatePinnedClient({ pinnedClient: null }));
                   }}
                   className="hangup-button"
                   style={{ padding: width * 0.05 }}
@@ -82,10 +80,7 @@ const PinnedVideo = ({
               )}
               <button
                 onClick={() =>
-                  dispatch({
-                    type: "SET_PINNED_CLIENT",
-                    payload: null,
-                  })
+                  dispatch(updatePinnedClient({ pinnedClient: null }))
                 }
                 className="pin-button"
                 style={{ padding: width * 0.05 }}

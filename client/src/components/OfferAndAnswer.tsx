@@ -1,10 +1,11 @@
 import { useRef } from "react";
 import type { Socket } from "socket.io-client";
 import type { ClientToServerEvents, ServerToClientEvents } from "../types";
+import { updateEmail } from "../state/meetingDataSlice";
+import { useAppDispatch } from "../state/hook";
 
 interface OfferAndAnswerProps {
   hostORClient: string;
-  dispatch: React.Dispatch<any>;
   startCall: () => Promise<void>;
   answerCall: (offer: string) => Promise<void>;
   offerAnswerVisibile: boolean;
@@ -14,10 +15,10 @@ const OfferAndAnswer = ({
   hostORClient,
   startCall,
   answerCall,
-  dispatch,
   offerAnswerVisibile,
   socket,
 }: OfferAndAnswerProps) => {
+  const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
   return (
     <div
@@ -35,10 +36,7 @@ const OfferAndAnswer = ({
           } Email Id`}
           onChange={(e) => {
             if (hostORClient === "host") {
-              dispatch({
-                type: "SET_EMAIL",
-                payload: e.target.value,
-              });
+              dispatch(updateEmail({ email: e.target.value }));
             }
           }}
         />

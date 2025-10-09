@@ -1,10 +1,10 @@
 import React from "react";
-interface LandingProps {
-  hostORClient: string;
-  setHostORClient: React.Dispatch<React.SetStateAction<string>>;
-}
+import { useAppDispatch } from "../state/hook";
+import { updateHostORClient } from "../state/appEventSlice";
 
-const Landing: React.FC<LandingProps> = ({ setHostORClient }) => {
+const Landing: React.FC = () => {
+  const dispatch = useAppDispatch();
+
   return (
     <div className="Landing" data-testid="landing-page">
       <div className="landing-text">
@@ -14,13 +14,15 @@ const Landing: React.FC<LandingProps> = ({ setHostORClient }) => {
 
         <button
           className="button-one disable-text-selection"
-          onClick={() => setHostORClient("host")}
+          onClick={() => dispatch(updateHostORClient({ hostORClient: "host" }))}
         >
           Start a Meeting
         </button>
         <button
           className="button-one disable-text-selection"
-          onClick={() => setHostORClient("client")}
+          onClick={() =>
+            dispatch(updateHostORClient({ hostORClient: "client" }))
+          }
         >
           Join a Meeting
         </button>
