@@ -11,11 +11,25 @@
     "build": "tsc"
   },
   "dependencies": {
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "express": "^5.1.0",
+    "mongoose": "^8.18.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "node-cache": "^5.1.2",
+    "uuid": "^11.1.0",
+    "validator": "^13.15.15"
   },
   "devDependencies": {
     "dotenv": "^17.2.3",
     "nodemon": "^3.1.10",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "@types/express": "^5.0.3",
+    "@types/mongoose": "^5.11.96",
+    "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.3.0",
+    "@types/uuid": "^10.0.0",
+    "@types/validator": "^13.15.2"
   }
 }

@@ -1,8 +1,25 @@
+import express from "express";
 import { Server } from "socket.io";
+import http from "http";
 import { ClientToServerEvents, ServerToClientEvents } from "./types.js";
 import "dotenv/config";
+import { connectDB } from "./utils/features.js";
+
+const socketPort: number = Number(process.env.SOCKET_PORT)!;
 const port: number = Number(process.env.PORT)!;
-const io = new Server<ClientToServerEvents, ServerToClientEvents>({
+const mongoURI = process.env.MONGO_URI || "";
+
+connectDB(mongoURI);
+
+const app = express();
+
+app.get("/", (req, res) =>
+  res.send({ message: "api is working with /api/v1" })
+);
+
+const server = http.createServer(app);
+
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
   cors: {
     origin: process.env.CLIENT_ORIGIN,
   },
@@ -38,4 +55,8 @@ io.on("connection", (socket) => {
   });
 });
 
-io.listen(port);
+io.listen(socketPort);
+
+app.listen(port, () => {
+  console.log(`server is working on localhost:${port}`);
+});
