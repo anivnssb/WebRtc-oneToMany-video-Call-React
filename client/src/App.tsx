@@ -1,18 +1,16 @@
-import WebRTC from "./components/WebRTC";
-import Landing from "./components/Landing";
 import "./app.css";
-import { type Socket } from "socket.io-client";
-import { useAppStateSelector } from "./state/hook";
-const App = ({ socket }: { socket: Socket }) => {
-  const hostORClient = useAppStateSelector(
-    (state) => state.appEvents.hostORClient
+import { io, type Socket } from "socket.io-client";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
+import type { ClientToServerEvents, ServerToClientEvents } from "./types";
+const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+  import.meta.env.VITE_SERVER_URL as string
+);
+const App = () => {
+  return (
+    <BrowserRouter>
+      <AppRoutes socket={socket} />
+    </BrowserRouter>
   );
-
-  if (hostORClient === "") {
-    return <Landing />;
-  } else {
-    return <WebRTC socket={socket} />;
-  }
 };
-
 export default App;
