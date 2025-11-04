@@ -1,29 +1,26 @@
 import { FaAnglesDown } from "react-icons/fa6";
 import BackArrowIcon from "./icons/BackArrowIcon";
 import type React from "react";
-import { useAppDispatch } from "../state/hook";
+import { useAppDispatch, useAppStateSelector } from "../state/hook";
 import {
   updateHostORClient,
   updateOfferAnswerVisibile,
 } from "../state/appEventSlice";
 import { updateAnswer, updateOffer } from "../state/meetingDataSlice";
 interface NavbarProps {
-  hostORClient: string;
-  inCall: boolean;
   createNewPeerConnectionForRemote: () => Promise<void>;
-  offerAnswerVisibile: boolean;
   hangup: (fromNavbar: boolean) => void;
   resetOfferSentRef: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
-  hostORClient,
-  inCall,
   createNewPeerConnectionForRemote,
-  offerAnswerVisibile,
   hangup,
   resetOfferSentRef,
 }) => {
+  const { hostORClient, inCall, offerAnswerVisibile } = useAppStateSelector(
+    (state) => state.appEvents
+  );
   const dispatch = useAppDispatch();
   return (
     <div className="navbar">
@@ -37,9 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({
         {" "}
         <BackArrowIcon />
       </button>
-      {inCall && hostORClient === "client" ? (
-        ""
-      ) : (
+      {inCall && hostORClient === "client" ? null : (
         <div className="navbar-right-side">
           {hostORClient === "host" && inCall ? (
             <button
@@ -57,9 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({
             >
               Add new client{" "}
             </button>
-          ) : (
-            ""
-          )}
+          ) : null}
 
           <div
             className={`offer-answer-expand-icon ${

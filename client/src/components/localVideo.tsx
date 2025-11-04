@@ -8,14 +8,15 @@ import {
   FaVideo,
   FaVideoSlash,
 } from "react-icons/fa";
+import { useAppStateSelector } from "../state/hook";
 
 interface LocalVideoProps {
-  inCall: boolean;
   hangup: () => void;
 }
 
 const LocalVideo = React.forwardRef<HTMLVideoElement, LocalVideoProps>(
-  ({ inCall, hangup }, localVideoRef) => {
+  ({ hangup }, localVideoRef) => {
+    const { inCall } = useAppStateSelector((state) => state.appEvents);
     const [overlayBtnContainerRef, width] = useObserveWidth();
     const [audioEnabled, setAudioEnabled] = useState(false);
     const [videoEnabled, setVideoEnabled] = useState(false);
@@ -65,9 +66,7 @@ const LocalVideo = React.forwardRef<HTMLVideoElement, LocalVideoProps>(
                     />
                   </button>
                 </div>
-              ) : (
-                ""
-              )}
+              ) : null}
               <div className="ctrl-button-group2">
                 {!audioEnabled ? (
                   <button
@@ -93,24 +92,23 @@ const LocalVideo = React.forwardRef<HTMLVideoElement, LocalVideoProps>(
                   <button
                     className="vdo-control-button "
                     style={{ padding: width * 0.05 }}
-                    onClick={() => enableDisableVideo(true)}
+                    onClick={() => enableDisableVideo(!videoEnabled)}
                   >
-                    <FaVideoSlash color="rgb(50, 50, 50)" size={width * 0.1} />
+                    {!videoEnabled ? (
+                      <FaVideoSlash
+                        color="rgb(50, 50, 50)"
+                        size={width * 0.1}
+                      />
+                    ) : (
+                      <FaVideo color="rgb(50, 50, 50)" size={width * 0.1} />
+                    )}
                   </button>
-                ) : (
-                  <button
-                    className="vdo-control-button "
-                    style={{ padding: width * 0.05 }}
-                    onClick={() => enableDisableVideo(false)}
-                  >
-                    <FaVideo color="rgb(50, 50, 50)" size={width * 0.1} />
-                  </button>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
         </div>
-        {inCall ? <p>You</p> : ""}
+        {inCall ? <p>You</p> : null}
         <div></div>
       </div>
     );

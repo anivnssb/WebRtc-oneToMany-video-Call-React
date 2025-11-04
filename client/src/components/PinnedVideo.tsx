@@ -4,22 +4,22 @@ import { ImPhoneHangUp } from "react-icons/im";
 import { FaThumbtackSlash } from "react-icons/fa6";
 import { FaExpand, FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
 import { updatePinnedClient } from "../state/appEventSlice";
-import { useAppDispatch } from "../state/hook";
+import { useAppDispatch, useAppStateSelector } from "../state/hook";
 
 interface PinnedVideoProps {
   hangupRemote: (index: number) => void;
-  hostORClient: string;
   stream: MediaStream;
   index: number;
   remoteStreams: MediaStream[];
 }
 const PinnedVideo = ({
   hangupRemote,
-  hostORClient,
+
   stream,
   index,
   remoteStreams,
 }: PinnedVideoProps) => {
+  const { hostORClient } = useAppStateSelector((state) => state.appEvents);
   const dispatch = useAppDispatch();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [overlayBtnContainerRef, width] = useObserveWidth();
@@ -75,9 +75,7 @@ const PinnedVideo = ({
                 >
                   <ImPhoneHangUp color="white" size={width * 0.1} />
                 </button>
-              ) : (
-                ""
-              )}
+              ) : null}
               <button
                 onClick={() =>
                   dispatch(updatePinnedClient({ pinnedClient: null }))
@@ -97,34 +95,26 @@ const PinnedVideo = ({
               >
                 <FaExpand color="rgb(50, 50, 50)" size={width * 0.1} />
               </button>
-              {mute ? (
-                <button
-                  className="vdo-control-button "
-                  style={{ padding: width * 0.05 }}
-                  onClick={() => muteUser(!mute)}
-                >
+              <button
+                className="vdo-control-button "
+                style={{ padding: width * 0.05 }}
+                onClick={() => muteUser(!mute)}
+              >
+                {mute ? (
                   <FaMicrophoneSlash
                     color="rgb(50, 50, 50)"
                     size={width * 0.1}
                   />
-                </button>
-              ) : (
-                <button
-                  className="vdo-control-button "
-                  style={{ padding: width * 0.05 }}
-                  onClick={() => muteUser(!mute)}
-                >
+                ) : (
                   <FaMicrophone color="rgb(50, 50, 50)" size={width * 0.1} />
-                </button>
-              )}
+                )}
+              </button>
             </div>
           </div>
           +
         </div>
       </div>
-      <p>{`${
-        hostORClient === "client" ? "Host" : "Client " + (index + 1)
-      } `}</p>
+      <p>{hostORClient === "client" ? "Host" : "Client " + (index + 1)}</p>
     </div>
   );
 };

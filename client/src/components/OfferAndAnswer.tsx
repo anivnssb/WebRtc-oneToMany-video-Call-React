@@ -2,22 +2,21 @@ import { useRef } from "react";
 import type { Socket } from "socket.io-client";
 import type { ClientToServerEvents, ServerToClientEvents } from "../types";
 import { updateEmail } from "../state/meetingDataSlice";
-import { useAppDispatch } from "../state/hook";
+import { useAppDispatch, useAppStateSelector } from "../state/hook";
 
 interface OfferAndAnswerProps {
-  hostORClient: string;
   startCall: () => Promise<void>;
   answerCall: (offer: string) => Promise<void>;
-  offerAnswerVisibile: boolean;
   socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 }
 const OfferAndAnswer = ({
-  hostORClient,
   startCall,
   answerCall,
-  offerAnswerVisibile,
   socket,
 }: OfferAndAnswerProps) => {
+  const { hostORClient, offerAnswerVisibile } = useAppStateSelector(
+    (state) => state.appEvents
+  );
   const dispatch = useAppDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
   return (

@@ -10,15 +10,12 @@ import useObserveWidth from "../hooks/useObserveWidth";
 import { FaThumbtackSlash } from "react-icons/fa6";
 import SpinnerIcon from "./icons/SpinnerIcon";
 import { updatePinnedClient } from "../state/appEventSlice";
-import { useAppDispatch } from "../state/hook";
+import { useAppDispatch, useAppStateSelector } from "../state/hook";
 
 interface RemoteVideoProps {
   index: number;
   stream: MediaStream;
   hangupRemote: (index: number) => Promise<void>;
-  hostORClient: string;
-  pinnedClient: string | null;
-  inCall: boolean;
   remoteStreams: MediaStream[];
 }
 
@@ -26,11 +23,11 @@ const RemoteVideo = ({
   index,
   stream,
   hangupRemote,
-  hostORClient,
-  pinnedClient,
-  inCall,
   remoteStreams,
 }: RemoteVideoProps) => {
+  const { hostORClient, inCall, pinnedClient } = useAppStateSelector(
+    (state) => state.appEvents
+  );
   const dispatch = useAppDispatch();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [overlayBtnContainerRef, width] = useObserveWidth();

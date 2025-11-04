@@ -286,7 +286,7 @@ const WebRTC = ({ socket }: WebRTCProps) => {
     setRemoteStreams([]);
     // dispatch(updateRemoteStreams({ remoteStreams: [] }));
     dispatch(updatePinnedClient({ pinnedClient: null }));
-    !fromNavbar && dispatch(updateMeetingEnded({ isMeetingEnded: true }));
+    if (!fromNavbar) dispatch(updateMeetingEnded({ isMeetingEnded: true }));
     dispatch(updateEmail({ email: "" }));
     if (localVideoRef.current) {
       const stream = localVideoRef.current.srcObject as MediaStream | null;
@@ -306,7 +306,7 @@ const WebRTC = ({ socket }: WebRTCProps) => {
     setRemoteStreams([]);
     // dispatch(updateRemoteStreams({ remoteStreams: [] }));
     dispatch(updatePinnedClient({ pinnedClient: null }));
-    !fromNavbar && dispatch(updateMeetingEnded({ isMeetingEnded: true }));
+    if (!fromNavbar) dispatch(updateMeetingEnded({ isMeetingEnded: true }));
     dispatch(updateEmail({ email: "" }));
     if (localVideoRef.current) {
       const stream = localVideoRef.current.srcObject as MediaStream | null;
@@ -409,10 +409,7 @@ const WebRTC = ({ socket }: WebRTCProps) => {
     <div className="App">
       <Navbar
         {...{
-          hostORClient,
-          inCall,
           createNewPeerConnectionForRemote,
-          offerAnswerVisibile,
           hangup: hostORClient === "host" ? hangupHost : hangupClient,
           resetOfferSentRef,
         }}
@@ -421,10 +418,8 @@ const WebRTC = ({ socket }: WebRTCProps) => {
       <div className="call-section">
         <OfferAndAnswer
           {...{
-            hostORClient,
             startCall,
             answerCall,
-            offerAnswerVisibile,
             socket,
           }}
         />
@@ -438,7 +433,6 @@ const WebRTC = ({ socket }: WebRTCProps) => {
               {...{
                 inCall,
                 hangup: hostORClient === "host" ? hangupHost : hangupClient,
-                pinnedClient,
               }}
               ref={localVideoRef}
               key="localvdo-123"
@@ -452,10 +446,6 @@ const WebRTC = ({ socket }: WebRTCProps) => {
                           stream,
                           index,
                           hangupRemote,
-                          hostORClient,
-                          dispatch,
-                          pinnedClient,
-                          inCall,
                           remoteStreams,
                         }}
                         key={index + "remote-video-component"}
@@ -469,9 +459,7 @@ const WebRTC = ({ socket }: WebRTCProps) => {
             <div className="pinned-section">
               <PinnedVideo
                 {...{
-                  pinnedClient,
                   hangupRemote,
-                  hostORClient,
                   remoteStreams,
                   stream:
                     remoteStreams[
