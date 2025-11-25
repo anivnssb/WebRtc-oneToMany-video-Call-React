@@ -19,7 +19,7 @@ import {
   updateAnswer,
   updateEmail,
   updateOffer,
-  updateRemoteStreams,
+  // updateRemoteStreams,
 } from "../state/meetingDataSlice";
 interface WebRTCProps {
   socket: Socket<ServerToClientEvents, ClientToServerEvents>;
