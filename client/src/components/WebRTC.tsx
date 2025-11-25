@@ -19,7 +19,7 @@ import {
   updateAnswer,
   updateEmail,
   updateOffer,
-  updateRemoteStreams,
+  // updateRemoteStreams,
 } from "../state/meetingDataSlice";
 interface WebRTCProps {
   socket: Socket<ServerToClientEvents, ClientToServerEvents>;
@@ -31,7 +31,7 @@ const WebRTC = ({ socket }: WebRTCProps) => {
     hostORClient,
     inCall,
     isMeetingEnded,
-    offerAnswerVisibile,
+    // offerAnswerVisibile,
     pinnedClient,
   } = useAppStateSelector((state) => state.appEvents);
   const { answer, email, offer } = useAppStateSelector(
